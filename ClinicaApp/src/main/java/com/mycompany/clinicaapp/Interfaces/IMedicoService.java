@@ -9,6 +9,7 @@ import java.util.List;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
 
+
 /**
  *
  * @author johan
@@ -19,7 +20,7 @@ public interface IMedicoService {
 
     boolean eliminarMedico(String cedula);
 
-    Medico iniciarSesion(String cedula, String contrasena);
+    Medico buscarPorCedula(String cedula);
 
     List<Medico> listaMedicos();
      

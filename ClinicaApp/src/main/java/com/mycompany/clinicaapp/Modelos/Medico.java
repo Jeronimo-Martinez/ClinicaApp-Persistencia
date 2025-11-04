@@ -4,11 +4,13 @@
  */
 package com.mycompany.clinicaapp.Modelos;
 
+import com.mycompany.clinicaapp.Interfaces.IUsuario;
+
 /**
  *
  * @author hecto
  */
-public class Medico {
+public class Medico  implements IUsuario{
     private String cedula;
     private String nombre;
     private Especialidad especialidad;
@@ -55,9 +57,6 @@ public class Medico {
 
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
-    }
-
-    
-    
+    } 
     
 }

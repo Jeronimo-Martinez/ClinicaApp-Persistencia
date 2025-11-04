@@ -14,6 +14,5 @@ public interface IPacienteService {
     boolean eliminarPaciente (Paciente paciente);
     List<Paciente> listarPacientes ();
     
-    // Permitir iniciar sesión para pacientes (añadido para que la UI use la interfaz)
-    Paciente iniciarSesion(String cedula, String contrasena);
+    Paciente buscarPorCedula(String cedula);
 }
