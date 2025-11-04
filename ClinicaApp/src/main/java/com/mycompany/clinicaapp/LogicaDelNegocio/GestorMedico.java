@@ -90,11 +90,10 @@ public class GestorMedico implements IMedicoService {
     }
 
     @Override
-
-    public Medico iniciarSesion(String cedula, String contrasena) {
-        for (Medico medico : listaMedicos) {
-            if (medico.getCedula().equals(cedula) && medico.getContrasena().equals(contrasena)) {
-                return medico;
+    public Medico buscarPorCedula(String cedula) {
+        for (Medico m : listaMedicos) {
+            if (m.getCedula().equals(cedula)) {
+                return m;
             }
         }
         return null;

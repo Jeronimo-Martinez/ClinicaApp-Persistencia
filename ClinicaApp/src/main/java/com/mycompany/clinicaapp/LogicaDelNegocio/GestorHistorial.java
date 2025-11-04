@@ -25,7 +25,7 @@ public class GestorHistorial implements IHistorialService {
      * Devuelve el historial médico (solo citas ya atendidas o con diagnóstico)
      * del paciente indicado.
      *
-     * @param nombrePac Nombre del paciente a consultar.
+     * @param documentoPac Documento del paciente a consultar.
      * @return Lista de citas con diagnóstico del paciente.
      */
     @Override
@@ -33,7 +33,7 @@ public class GestorHistorial implements IHistorialService {
         ArrayList<Cita> historial = new ArrayList<>();
 
         for (Cita c : gestorCita.getCitas()) {
-            if (c.getPaciente().getNombre().equalsIgnoreCase(documentoPac)
+            if (c.getPaciente().getCedula().equalsIgnoreCase(documentoPac)
                     && c.getDiagnostico() != null && !c.getDiagnostico().isEmpty()) {
                 historial.add(c);
             }

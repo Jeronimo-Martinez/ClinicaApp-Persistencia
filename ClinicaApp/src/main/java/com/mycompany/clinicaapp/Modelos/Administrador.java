@@ -1,9 +1,11 @@
 package com.mycompany.clinicaapp.Modelos;
 
+import com.mycompany.clinicaapp.Interfaces.IUsuario;
+
 /**
  * Modelo que representa a un administrador del sistema.
  */
-public class Administrador {
+public class Administrador implements IUsuario {
 
 	private String nombre;
 	private String cedula;
@@ -21,8 +23,7 @@ public class Administrador {
 		// Guardar correctamente la cédula y la contraseña
 		this.cedula = cedula;
 		this.contrasena = contrasena;
-		// Por compatibilidad inicial, también usamos la cédula como nombre si no se especifica otro
-		this.nombre = cedula;
+
     }
 
 	// Getters y setters

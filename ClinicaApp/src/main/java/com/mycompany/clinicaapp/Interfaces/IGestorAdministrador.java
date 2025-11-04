@@ -3,6 +3,7 @@ import com.mycompany.clinicaapp.Modelos.Paciente;
 
 import java.util.List;
 
+import com.mycompany.clinicaapp.Modelos.Administrador;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
 
@@ -20,9 +21,5 @@ public interface IGestorAdministrador {
     List<Paciente> listarPacientes();
     List<Medico> listarMedicos();
     List<Especialidad> listarEspecialidades();
-    IMedicoService getMedicoService();
-    
-    IPacienteService getPacienteService();
-    
-    IEspecialidadService getEspecialidadService();
+    Administrador buscarPorCedula(String cedula);
 }

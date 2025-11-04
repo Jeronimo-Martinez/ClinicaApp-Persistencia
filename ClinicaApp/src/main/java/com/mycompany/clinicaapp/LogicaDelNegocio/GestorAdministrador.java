@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class GestorAdministrador implements IGestorAdministrador {
 
-    private static GestorAdministrador instancia;
     private final IMedicoService medicoService;
     private final IPacienteService pacienteService;
     private final IEspecialidadService especialidadService;
@@ -27,7 +26,7 @@ public class GestorAdministrador implements IGestorAdministrador {
      * Constructor que recibe las dependencias desde fuera.
      * Esto permite inyectar las implementaciones concretas.
      */
-    private GestorAdministrador(IMedicoService medicoService, IPacienteService pacienteService, IEspecialidadService especialidadService) {
+    public GestorAdministrador(IMedicoService medicoService, IPacienteService pacienteService, IEspecialidadService especialidadService) {
         this.medicoService = medicoService;
         this.pacienteService = pacienteService;
         this.especialidadService = especialidadService;
@@ -37,39 +36,17 @@ public class GestorAdministrador implements IGestorAdministrador {
         listaAdministradores.add(new Administrador("1234567890", "admin1234"));
     }
 
-    /**
-     * Devuelve la única instancia de GestorAdministrador.
-     * @param medicoService
-     * @param pacienteService
-     * @param especialidadService
-     * @return 
-     */
-    public static GestorAdministrador getInstanciaAdministrador(
-        IMedicoService medicoService,
-        IPacienteService pacienteService,
-        IEspecialidadService especialidadService
-) {
-    if (instancia == null) {
-        instancia = new GestorAdministrador(medicoService, pacienteService, especialidadService);
-    }
-    return instancia;
-
-    }
-
-    /**
-     * Permite iniciar sesión del administrador por usuario y contraseña.
-     * @param cedula
-     * @param contrasena
-     * @return 
-     */
-    public Administrador iniciarSesion(String cedula, String contrasena) {
-        for (Administrador admin : listaAdministradores) {
-            if (admin.getCedula().equals(cedula) && admin.getContrasena().equals(contrasena)) {
-                return admin;
+   
+    @Override
+    public Administrador buscarPorCedula(String cedula) {
+        for (Administrador a : listaAdministradores) {
+            if (a.getCedula().equals(cedula)) {
+                return a;
             }
         }
         return null;
     }
+   
 
     
     @Override
@@ -135,17 +112,17 @@ public List<Especialidad> listarEspecialidades() {
     return especialidadService.listarEspecialidades();
 }
 
-   @Override
+
 public IMedicoService getMedicoService() {
     return this.medicoService;
 }
 
-@Override
+
 public IPacienteService getPacienteService() {
     return this.pacienteService;
 }
 
-@Override
+
 public IEspecialidadService getEspecialidadService() {
     return this.especialidadService;
 }
