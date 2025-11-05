@@ -19,6 +19,7 @@ public class VentanaIniciarSesion extends JFrame {
     private JPasswordField txtContrasena;
     private JButton btnIniciarSesion;
     private JButton btnSalir;
+    private JButton btnRegistrarse;
 
     // Servicios / gestores
     private final IPacienteService gestorPaciente;
@@ -77,11 +78,22 @@ public class VentanaIniciarSesion extends JFrame {
         gbc.gridx = 1;
         btnSalir = new JButton("Salir");
         add(btnSalir, gbc);
+
+        // --- Nuevo bloque: texto y botón para registrarse ---
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        JLabel lblNoCuenta = new JLabel("¿Aún no tienes una cuenta?", SwingConstants.CENTER);
+        add(lblNoCuenta, gbc);
+
+        gbc.gridy++;
+        btnRegistrarse = new JButton("Registrarse");
+        add(btnRegistrarse, gbc);
     }
 
     private void configurarVentana() {
         setTitle("ClínicaApp - Inicio de Sesión");
-        setSize(400, 250);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -118,31 +130,28 @@ public class VentanaIniciarSesion extends JFrame {
                     revalidate();
                     repaint();
 
-                } else if (usuario instanceof Medico) {
-                    // Medico medico = (Medico) usuario;
-                    // VentanaMedica ventanaMedica = new VentanaMedica(medico);
-                    // ventanaMedica.setVisible(true);
-                    // dispose();
-
                 } else if (usuario instanceof Administrador) {
-
-                    // Crear el panel del administrador
                     PanelAdministrador panelAdmin = new PanelAdministrador(gestorAdmin);
-
-                    // Reemplazar el contenido del JFrame actual
                     setContentPane(panelAdmin);
                     revalidate();
                     repaint();
                     pack();
                     setLocationRelativeTo(null);
-}
+                } else if (usuario instanceof Medico){
+                    // panel a poner
                 }
+            }
+        });
 
-            
-
+        btnRegistrarse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaRegistrarse ventanaRegistro =
+                        new VentanaRegistrarse(gestorPaciente);
+                ventanaRegistro.setVisible(true);
+            }
         });
 
         btnSalir.addActionListener(e -> System.exit(0));
     }
-
 }

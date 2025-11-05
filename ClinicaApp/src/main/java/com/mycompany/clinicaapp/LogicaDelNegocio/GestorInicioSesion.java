@@ -1,5 +1,4 @@
 package com.mycompany.clinicaapp.LogicaDelNegocio;
-import com.mycompany.clinicaapp.Interfaces.IGestorAdministrador;
 import com.mycompany.clinicaapp.Interfaces.*;
 import com.mycompany.clinicaapp.Modelos.*;
 
@@ -17,6 +16,14 @@ public class GestorInicioSesion implements IInicioSesionService {
         this.gestorPaciente = gestorPaciente;
         this.gestorMedico = gestorMedico;
         this.gestorAdmin = gestorAdmin;
+    }
+    @Override
+        public boolean registrarPaciente(String nombre, String cedula, String telefono, int edad, String contrasena) {
+        // Crear el nuevo paciente con los datos del formulario
+        Paciente nuevo = new Paciente(nombre, cedula, telefono, edad, contrasena);
+        
+        // Delegar el registro al gestor de pacientes
+        return gestorPaciente.registrarPaciente(nuevo);
     }
 
     @Override
