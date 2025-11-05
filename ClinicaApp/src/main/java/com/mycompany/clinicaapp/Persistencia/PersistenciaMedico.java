@@ -31,12 +31,12 @@ public class PersistenciaMedico {
         }
     }
 
-    // 🔹 Cargar lista de médicos
+    
     public static List<Medico> cargar() {
         File archivo = new File(ARCHIVO);
 
         if (!archivo.exists()) {
-            System.out.println("⚠️ No se encontró el archivo de médicos, devolviendo lista vacía.");
+            System.out.println(" No se encontró el archivo de médicos, devolviendo lista vacía.");
             return new ArrayList<>();
         }
 
@@ -48,7 +48,7 @@ public class PersistenciaMedico {
                 return new ArrayList<>();
             }
 
-            System.out.println("📂 Médicos cargados desde: " + ARCHIVO);
+            System.out.println(" Médicos cargados desde: " + ARCHIVO);
             return lista;
 
         } catch (IOException e) {
