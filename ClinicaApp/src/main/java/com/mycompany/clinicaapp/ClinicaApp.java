@@ -8,7 +8,6 @@ import com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion;
 
 /**
  * Punto de entrada de la aplicación.
- * Crea instancias concretas de los gestores y abre la ventana de inicio de sesión
  */
 public class ClinicaApp {
 
