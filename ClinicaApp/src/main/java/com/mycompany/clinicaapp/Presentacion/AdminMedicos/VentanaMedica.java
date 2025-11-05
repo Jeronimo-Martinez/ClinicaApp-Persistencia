@@ -4,21 +4,22 @@
  */
 package com.mycompany.clinicaapp.Presentacion.AdminMedicos;
 
-import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
-import com.mycompany.clinicaapp.Interfaces.IMedicoService;
-import com.mycompany.clinicaapp.Modelos.Medico;
-import com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.ActivadorJtableMedicoBotones;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.EventosParaBotones;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.RenderizadoTablaMedico;
 import java.awt.Color;
 import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
+import com.mycompany.clinicaapp.Interfaces.IMedicoService;
+import com.mycompany.clinicaapp.Modelos.Medico;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.ActivadorJtableMedicoBotones;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.EventosParaBotones;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.RenderizadoTablaMedico;
 
 /**
  *
