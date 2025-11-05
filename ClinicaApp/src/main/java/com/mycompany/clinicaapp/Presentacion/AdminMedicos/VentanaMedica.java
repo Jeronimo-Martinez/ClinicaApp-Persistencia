@@ -28,17 +28,20 @@ public class VentanaMedica extends javax.swing.JPanel {
    private final IInterfazAdminMedica interfazAdmin;
    List<Medico> medicos;
    public void llenarFilas (){
-       medicos = medicoService.listaMedicos();
+       // Actualizar la lista de médicos antes de llenar la tabla
+       this.medicos = medicoService.listaMedicos();
         
-
-        DefaultTableModel model = (DefaultTableModel) tablaMedica.getModel();
-        model.setRowCount(0);
-        for (Medico m : medicos) {
-            model.addRow(new Object[]{
-                m.getNombre(),
-                m.getCedula(),
-                m.getEspecialidad().getNombre(),});
-        }
+       DefaultTableModel model = (DefaultTableModel) tablaMedica.getModel();
+       model.setRowCount(0); // Limpiar tabla
+       // Llenar con datos actualizados
+       for (Medico m : medicos) {
+           model.addRow(new Object[]{
+               m.getNombre(),
+               m.getCedula(),
+               m.getEspecialidad().getNombre(),});
+       }
+       // Notificar cambios en la tabla
+       model.fireTableDataChanged();
    }
    
     public VentanaMedica(IMedicoService medicoService, IInterfazAdminMedica interfazAdmin) {
@@ -47,6 +50,8 @@ public class VentanaMedica extends javax.swing.JPanel {
         this.medicos=medicoService.listaMedicos();
         initComponents();
         llenarFilas();
+        // Actualizar la lista de médicos antes de llenar la tabla
+        this.medicos = medicoService.listaMedicos();
         
 
         setBorder(BorderFactory.createTitledBorder(
