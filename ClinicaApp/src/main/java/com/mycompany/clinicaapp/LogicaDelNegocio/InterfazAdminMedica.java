@@ -1,12 +1,13 @@
 package com.mycompany.clinicaapp.LogicaDelNegocio;
 
+import javax.swing.JFrame;
+
 import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
 import com.mycompany.clinicaapp.Interfaces.IMedicoService;
 import com.mycompany.clinicaapp.Modelos.Medico;
 import com.mycompany.clinicaapp.Presentacion.AdminMedicos.VentanaAgregarMedico;
 import com.mycompany.clinicaapp.Presentacion.AdminMedicos.VentanaEditarMedico;
 import com.mycompany.clinicaapp.Presentacion.AdminMedicos.VentanaMedica;
-import javax.swing.JFrame;
 
 /**
  * Maneja la lógica de navegación entre las ventanas de administración médica.
@@ -16,6 +17,7 @@ public class InterfazAdminMedica implements IInterfazAdminMedica {
     private final IMedicoService medicoService;
     private JFrame framePrincipal;
     private VentanaMedica ventanaMedica;
+
 
     public InterfazAdminMedica(IMedicoService medicoService) {
         this.medicoService = medicoService;
@@ -72,6 +74,14 @@ public class InterfazAdminMedica implements IInterfazAdminMedica {
     public void actualizarTablaMedicos() {
         if (ventanaMedica != null) {
             ventanaMedica.llenarFilas();
+        }
+    }
+    
+    @Override
+    public void volverAlMenu() {
+        if (framePrincipal != null) {
+            framePrincipal.dispose();
+            new com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion().setVisible(true);
         }
     }
 

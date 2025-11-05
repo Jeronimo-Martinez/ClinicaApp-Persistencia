@@ -187,13 +187,9 @@ public class VentanaMedica extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Volver al panel del administrador
-        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
-        if (window instanceof JFrame frame) {
-            // Cerrar la ventana actual y volver a la ventana de inicio de sesión
-            frame.dispose();
-            // Crear una nueva instancia de la ventana de inicio de sesión
-            new com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion().setVisible(true);
+        // Volver al panel del administrador usando la interfaz
+        if (interfazAdmin != null) {
+            interfazAdmin.volverAlMenu();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
