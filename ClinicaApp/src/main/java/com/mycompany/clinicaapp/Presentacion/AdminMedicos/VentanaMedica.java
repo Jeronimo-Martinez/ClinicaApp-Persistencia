@@ -7,6 +7,7 @@ package com.mycompany.clinicaapp.Presentacion.AdminMedicos;
 import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
 import com.mycompany.clinicaapp.Interfaces.IMedicoService;
 import com.mycompany.clinicaapp.Modelos.Medico;
+import com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion;
 import com.mycompany.clinicaapp.Utilidades.AdminMedica.ActivadorJtableMedicoBotones;
 import com.mycompany.clinicaapp.Utilidades.AdminMedica.EventosParaBotones;
 import com.mycompany.clinicaapp.Utilidades.AdminMedica.RenderizadoTablaMedico;
@@ -185,7 +186,14 @@ public class VentanaMedica extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // Volver al panel del administrador
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof JFrame frame) {
+            // Cerrar la ventana actual y volver a la ventana de inicio de sesión
+            frame.dispose();
+            // Crear una nueva instancia de la ventana de inicio de sesión
+            new com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion().setVisible(true);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
