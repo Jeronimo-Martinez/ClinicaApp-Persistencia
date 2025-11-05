@@ -3,11 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.clinicaapp;
-
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorMedico;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorPaciente;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorEspecialidad;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorAdministrador;
+import javax.swing.SwingUtilities;
 import com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion;
 
 /**
@@ -16,21 +12,8 @@ import com.mycompany.clinicaapp.Presentacion.VentanaIniciarSesion;
  */
 public class ClinicaApp {
 
-	public static void main(String[] args) {
-		GestorMedico gestorMedico = new GestorMedico();
-		GestorPaciente gestorPaciente = new GestorPaciente();
-		GestorEspecialidad gestorEspecialidad = new GestorEspecialidad();
-
-		// Inicializar el GestorAdministrador (contendrá el administrador por defecto)
-		GestorAdministrador.getInstanciaAdministrador(gestorMedico, gestorPaciente, gestorEspecialidad);
-
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				VentanaIniciarSesion ventana = new VentanaIniciarSesion(gestorMedico, gestorPaciente, gestorEspecialidad);
-				ventana.setLocationRelativeTo(null);
-				ventana.setVisible(true);
-			}
-		});
-	}
-
+	
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new VentanaIniciarSesion().setVisible(true));
+    }
 }

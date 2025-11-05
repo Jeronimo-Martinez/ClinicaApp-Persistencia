@@ -1,11 +1,13 @@
 package com.mycompany.clinicaapp.Modelos;
 
+import com.mycompany.clinicaapp.Interfaces.IUsuario;
+
 /**
  * Esta clase representa a un paciente de la clínica
  * @author Valentina 
  */ 
 
-public class Paciente {
+public class Paciente implements IUsuario {
 
     private String cedula;
     private String nombre;

@@ -1,407 +1,148 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.mycompany.clinicaapp.Presentacion;
-import com.mycompany.clinicaapp.Interfaces.IEspecialidadService;
+
+import com.mycompany.clinicaapp.Interfaces.*;
+import com.mycompany.clinicaapp.LogicaDelNegocio.GestorAdministrador;
+import com.mycompany.clinicaapp.LogicaDelNegocio.GestorCita;
+import com.mycompany.clinicaapp.LogicaDelNegocio.GestorEspecialidad;
+import com.mycompany.clinicaapp.LogicaDelNegocio.GestorInicioSesion;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorMedico;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorPaciente;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorEspecialidad;
-import com.mycompany.clinicaapp.Interfaces.IMedicoService;
-import com.mycompany.clinicaapp.Interfaces.IPacienteService;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorCita;
-import com.mycompany.clinicaapp.Modelos.Cita;
-import com.mycompany.clinicaapp.Modelos.Medico;
-import com.mycompany.clinicaapp.Modelos.Paciente;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.List;
-import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import com.mycompany.clinicaapp.LogicaDelNegocio.GestorAdministrador;
-import com.mycompany.clinicaapp.Modelos.Administrador;
+import com.mycompany.clinicaapp.Modelos.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/**
- *
- * @author hecto
- */
-public class VentanaIniciarSesion extends javax.swing.JFrame {
+public class VentanaIniciarSesion extends JFrame {
 
-    private final IMedicoService medicoService;
-    private final IPacienteService pacienteService;
-    private final IEspecialidadService especialidadService;
-    // Usar solo las interfaces (inyección). El constructor por defecto seguirá creando implementaciones concretas.
+    private JTextField txtCedula;
+    private JPasswordField txtContrasena;
+    private JButton btnIniciarSesion;
+    private JButton btnSalir;
 
-    /**
-     * Constructor que recibe los servicios desde el GestorAdministrador
-     * @param medicoService
-     * @param pacienteService
-     * @param especialidadService
-     */
-    // Constructor por defecto que crea gestores concretos (para compatibilidad con llamadas sin inyección)
+    // Servicios / gestores
+    private final IPacienteService gestorPaciente;
+    private final IMedicoService gestorMedico;
+    private final IEspecialidadService gestorEspecialidad;
+    private final IGestorAdministrador gestorAdmin;
+    private final IInicioSesionService gestorInicioSesion;
+    private final GestorCita gestorCita;
+
     public VentanaIniciarSesion() {
-        // Constructor por defecto: crear implementaciones concretas y delegar
-        this(new GestorMedico(), new GestorPaciente(), new GestorEspecialidad());
+        // Inicialización de gestores
+        gestorPaciente = new GestorPaciente();
+        gestorMedico = new GestorMedico();
+        gestorEspecialidad = new GestorEspecialidad();
+        gestorAdmin = new GestorAdministrador(gestorMedico, gestorPaciente, gestorEspecialidad);
+        gestorInicioSesion = new GestorInicioSesion(gestorPaciente, gestorMedico, gestorAdmin);
+        gestorCita = new GestorCita();
+
+        inicializarComponentes();
+        configurarVentana();
+        configurarEventos();
     }
 
-   public VentanaIniciarSesion(IMedicoService medicoService,
-                            IPacienteService pacienteService,
-                            IEspecialidadService especialidadService) {
-    this.medicoService = medicoService;
-    this.pacienteService = pacienteService;
-    this.especialidadService = especialidadService;
-    initComponents();
+    private void inicializarComponentes() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-    // Inicialización de radio buttons u otros componentes
-        ButtonGroup grupoUsuarios = new ButtonGroup();
-    grupoUsuarios.add(rbPaciente);
-    grupoUsuarios.add(rbMedico);
-    grupoUsuarios.add(rbAdmin);
-}
+        JLabel lblTitulo = new JLabel("Iniciar Sesión", SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(lblTitulo, gbc);
 
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+        add(new JLabel("Cédula:"), gbc);
+        txtCedula = new JTextField(15);
+        gbc.gridx = 1;
+        add(txtCedula, gbc);
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        add(new JLabel("Contraseña:"), gbc);
+        txtContrasena = new JPasswordField(15);
+        gbc.gridx = 1;
+        add(txtContrasena, gbc);
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        lbltitle = new javax.swing.JLabel();
-        btningresar = new javax.swing.JButton();
-        btnregistrarse = new javax.swing.JButton();
-        btnsalir = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtusuario = new javax.swing.JTextField();
-        txtpassword = new javax.swing.JPasswordField();
-    rbPaciente = new javax.swing.JRadioButton();
-    rbMedico = new javax.swing.JRadioButton();
-    rbAdmin = new javax.swing.JRadioButton();
-        jLabel3 = new javax.swing.JLabel();
+        gbc.gridy++;
+        gbc.gridx = 0;
+        btnIniciarSesion = new JButton("Iniciar Sesión");
+        add(btnIniciarSesion, gbc);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        gbc.gridx = 1;
+        btnSalir = new JButton("Salir");
+        add(btnSalir, gbc);
+    }
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+    private void configurarVentana() {
+        setTitle("ClínicaApp - Inicio de Sesión");
+        setSize(400, 250);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    private void configurarEventos() {
+        btnIniciarSesion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cedula = txtCedula.getText().trim();
+                String contrasena = new String(txtContrasena.getPassword()).trim();
 
-        lbltitle.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        lbltitle.setText("Sistema de Gestión Clínica");
-        lbltitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        btningresar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btningresar.setText("Ingresar");
-        btningresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btningresarActionPerformed(evt);
-            }
-        });
-
-        btnregistrarse.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnregistrarse.setText("Registrarse");
-        btnregistrarse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnregistrarseActionPerformed(evt);
-            }
-        });
-
-        btnsalir.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnsalir.setText("Salir");
-        btnsalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnsalirActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setText("Usuario:");
-
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel2.setText("Contraseña:");
-
-        rbPaciente.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        rbPaciente.setText("Paciente");
-        rbPaciente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbPacienteActionPerformed(evt);
-            }
-        });
-
-        rbMedico.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        rbMedico.setText("Medico");
-        rbMedico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbMedicoActionPerformed(evt);
-            }
-        });
-
-        rbAdmin.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        rbAdmin.setText("Administrador");
-        rbAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbAdminActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel3.setText("¿Aún no tienes una cuenta?");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(90, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(82, 82, 82)
-                                        .addComponent(lbltitle))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(194, 194, 194)
-                                        .addComponent(btningresar))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(120, 120, 120)
-                                        .addComponent(rbPaciente)
-                                        .addGap(30, 30, 30)
-                                        .addComponent(rbMedico)
-                                        .addGap(30, 30, 30)
-                                        .addComponent(rbAdmin))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(34, 34, 34))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnregistrarse)
-                                .addGap(159, 159, 159)))
-                        .addComponent(btnsalir)
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(204, 204, 204))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(lbltitle)
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbPaciente)
-                    .addComponent(rbMedico)
-                    .addComponent(rbAdmin))
-                .addGap(18, 18, 18)
-                .addComponent(btningresar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnsalir)
-                    .addComponent(btnregistrarse))
-                .addGap(20, 20, 20))
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btningresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btningresarActionPerformed
-        String usuarioingresado = txtusuario.getText();
-        String contrasenaingresada = new String(txtpassword.getPassword());
-
-        if (usuarioingresado.isEmpty() || contrasenaingresada.isEmpty()) {
-        JOptionPane.showMessageDialog(this, 
-            "Por favor, complete todos los campos.", 
-            "Campos vacíos", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-        }
-        
-        if (!rbPaciente.isSelected() && !rbMedico.isSelected() && !rbAdmin.isSelected()) {
-        JOptionPane.showMessageDialog(this, 
-            "Seleccione si es Paciente, Médico o Administrador antes de iniciar sesión.", 
-            "Selección requerida", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-        }
-        
-        
-    if (rbPaciente.isSelected()) {
-    Paciente paciente = pacienteService.iniciarSesion(usuarioingresado, contrasenaingresada);
-        if (paciente != null) {
-            JOptionPane.showMessageDialog(this, 
-                "Inicio de sesión exitoso. ¡Bienvenido, " + paciente.getNombre() + "!");
-            
-            // TO-DO -> CAMBIAR A PACIENTESERVICE 
-            GestorCita gestor = new GestorCita();
-            List<Cita> citas = gestor.consultarCitasPaciente(paciente);
-            new PanelCitasPaciente(citas,gestor,paciente ).setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Credenciales incorrectas para paciente.", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-
-    } else if (rbMedico.isSelected()) {
-        Medico medico = medicoService.iniciarSesion(usuarioingresado, contrasenaingresada);
-        if (medico != null) {
-            JOptionPane.showMessageDialog(this, 
-                "Inicio de sesión exitoso. Bienvenido Dr(a). " + medico.getNombre() + "!");
-            
-            // TO-DO -> CAMBIAR A MEDICO SERVICE
-            GestorCita gestor = new GestorCita();
-            List<Cita> citas = gestor.consultarCitasMedico(medico);
-            new PanelCitasMedico(citas, gestor,medico ).setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Credenciales incorrectas para médico.", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-        }
-        else if (rbAdmin.isSelected()) {
-            // Validar administrador utilizando el singleton GestorAdministrador
-            GestorAdministrador gAdmin = GestorAdministrador.getInstanciaAdministrador(medicoService, pacienteService, especialidadService);
-            Administrador admin = gAdmin.iniciarSesion(usuarioingresado, contrasenaingresada);
-            if (admin != null) {
-                JOptionPane.showMessageDialog(this,
-                    "Inicio de sesión exitoso. Bienvenido administrador: " + admin.getNombre());
-                // Abrir PanelAdministrador en una ventana
-                JFrame ventanaAdmin = new JFrame("Panel Administrador");
-                ventanaAdmin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                ventanaAdmin.setContentPane(new PanelAdministrador(gAdmin));
-                ventanaAdmin.pack();
-                ventanaAdmin.setLocationRelativeTo(null);
-                ventanaAdmin.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "Credenciales incorrectas para administrador.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    
-    }//GEN-LAST:event_btningresarActionPerformed
-
-    private void btnsalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsalirActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_btnsalirActionPerformed
-
-    private void rbMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMedicoActionPerformed
-      
-    }//GEN-LAST:event_rbMedicoActionPerformed
-
-    private void rbPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPacienteActionPerformed
-        
-    }//GEN-LAST:event_rbPacienteActionPerformed
-
-    private void rbAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAdminActionPerformed
-        // No action required here; handled at login
-    }//GEN-LAST:event_rbAdminActionPerformed
-
-    private void btnregistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregistrarseActionPerformed
-        VentanaRegistrarse ventanaRegistro = new VentanaRegistrarse(medicoService, pacienteService, especialidadService);
-        ventanaRegistro.setVisible(true);
-        Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (pantalla.width - ventanaRegistro.getWidth()) / 2;
-        int y = (pantalla.height - ventanaRegistro.getHeight()) / 2;
-        ventanaRegistro.setLocation(x, y);
-        this.dispose();
-    }//GEN-LAST:event_btnregistrarseActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                if (cedula.isEmpty() || contrasena.isEmpty()) {
+                    JOptionPane.showMessageDialog(VentanaIniciarSesion.this,
+                            "Por favor ingrese cédula y contraseña.",
+                            "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaIniciarSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaIniciarSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaIniciarSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaIniciarSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VentanaIniciarSesion().setVisible(true);
-            }
+                IUsuario usuario = gestorInicioSesion.iniciarSesion(cedula, contrasena);
+
+                if (usuario == null) {
+                    JOptionPane.showMessageDialog(VentanaIniciarSesion.this,
+                            "Cédula o contraseña incorrectas.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Según el tipo de usuario autenticado
+                if (usuario instanceof Paciente) {
+                    Paciente paciente = (Paciente) usuario;
+                    PanelPaciente panelPaciente = new PanelPaciente(
+                            gestorPaciente, gestorCita, paciente, VentanaIniciarSesion.this);
+                    setContentPane(panelPaciente);
+                    revalidate();
+                    repaint();
+
+                } else if (usuario instanceof Medico) {
+                    // Medico medico = (Medico) usuario;
+                    // VentanaMedica ventanaMedica = new VentanaMedica(medico);
+                    // ventanaMedica.setVisible(true);
+                    // dispose();
+
+                } else if (usuario instanceof Administrador) {
+
+                    // Crear el panel del administrador
+                    PanelAdministrador panelAdmin = new PanelAdministrador(gestorAdmin);
+
+                    // Reemplazar el contenido del JFrame actual
+                    setContentPane(panelAdmin);
+                    revalidate();
+                    repaint();
+                    pack();
+                    setLocationRelativeTo(null);
+}
+                }
+
+            
+
         });
+
+        btnSalir.addActionListener(e -> System.exit(0));
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btningresar;
-    private javax.swing.JButton btnregistrarse;
-    private javax.swing.JButton btnsalir;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lbltitle;
-    private javax.swing.JRadioButton rbMedico;
-    private javax.swing.JRadioButton rbPaciente;
-    private javax.swing.JRadioButton rbAdmin;
-    private javax.swing.JPasswordField txtpassword;
-    private javax.swing.JTextField txtusuario;
-    // End of variables declaration//GEN-END:variables
 }
