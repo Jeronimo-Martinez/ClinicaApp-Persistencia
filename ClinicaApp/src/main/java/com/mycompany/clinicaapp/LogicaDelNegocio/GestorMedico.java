@@ -7,49 +7,46 @@ import java.util.stream.Collectors;
 import com.mycompany.clinicaapp.Interfaces.IMedicoService;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
-import com.mycompany.clinicaapp.Persistencia.PersistenciaMedico;
+import com.mycompany.clinicaapp.Interfaces.IRepositorioMedico;
+import com.mycompany.clinicaapp.Persistencia.RepositorioMedico;
+
 
 public class GestorMedico implements IMedicoService {
 
+    private final IRepositorioMedico repositorio; // instancia del repositorio
     private final ArrayList<Medico> listaMedicos;
 
     public GestorMedico() {
+        this.repositorio = new RepositorioMedico();
+
         // 🔹 Cargar médicos del archivo al iniciar
-        listaMedicos = new ArrayList<>(PersistenciaMedico.cargar());
+        List<Medico> cargados = repositorio.cargar();
+        this.listaMedicos = new ArrayList<>(cargados != null ? cargados : new ArrayList<>());
 
         // 🔹 Si está vacío (primera vez), agregar médicos de ejemplo
         if (listaMedicos.isEmpty()) {
             Especialidad cardio = new Especialidad("Cardiología");
             Especialidad general = new Especialidad("Medicina General");
+
             listaMedicos.add(new Medico("1111", "Andrés Gómez", cardio, "1111"));
             listaMedicos.add(new Medico("2222", "Laura Torres", general, "2222"));
-            PersistenciaMedico.guardar(listaMedicos);
+
+            repositorio.guardar(listaMedicos);
         }
     }
 
-    // Filtro por especialidad
+    // 🔹 Listar médicos por especialidad
     @Override
     public List<Medico> listarMedicosEspecialidad(String nombreEspecialidad) {
         return listaMedicos.stream()
-                .filter(m -> m.getEspecialidad().getNombre().equals(nombreEspecialidad))
+                .filter(m -> m.getEspecialidad().getNombre().equalsIgnoreCase(nombreEspecialidad))
                 .collect(Collectors.toList());
     }
 
+    // 🔹 Listar todos los médicos
     @Override
     public List<Medico> listarMedicosEspecialidad() {
         return new ArrayList<>(listaMedicos);
-    }
-
-    public List<Medico> listarMedicos() {
-        return listaMedicos();
-    }
-
-    @Override
-    public boolean editarMedico(Medico medico, String nuevoNombre, Especialidad nuevaEspecialidad) {
-        medico.setNombre(nuevoNombre);
-        medico.setEspecialidad(nuevaEspecialidad);
-        PersistenciaMedico.guardar(listaMedicos);
-        return true;
     }
 
     @Override
@@ -57,22 +54,34 @@ public class GestorMedico implements IMedicoService {
         return new ArrayList<>(listaMedicos);
     }
 
+    // 🔹 Editar un médico
     @Override
-    public boolean agregarMedic(Medico medico) {
-        listaMedicos.add(medico);
-        PersistenciaMedico.guardar(listaMedicos);
+    public boolean editarMedico(Medico medico, String nuevoNombre, Especialidad nuevaEspecialidad) {
+        medico.setNombre(nuevoNombre);
+        medico.setEspecialidad(nuevaEspecialidad);
+        repositorio.guardar(listaMedicos);
         return true;
     }
 
+    // 🔹 Agregar un nuevo médico
+    @Override
+    public boolean agregarMedic(Medico medico) {
+        listaMedicos.add(medico);
+        repositorio.guardar(listaMedicos);
+        return true;
+    }
+
+    // 🔹 Eliminar un médico por cédula
     @Override
     public boolean eliminarMedico(String cedula) {
         boolean eliminado = listaMedicos.removeIf(m -> m.getCedula().equals(cedula));
         if (eliminado) {
-            PersistenciaMedico.guardar(listaMedicos);
+            repositorio.guardar(listaMedicos);
         }
         return eliminado;
     }
 
+    // 🔹 Buscar médico por cédula
     @Override
     public Medico buscarPorCedula(String cedula) {
         for (Medico m : listaMedicos) {
@@ -83,3 +92,4 @@ public class GestorMedico implements IMedicoService {
         return null;
     }
 }
+
