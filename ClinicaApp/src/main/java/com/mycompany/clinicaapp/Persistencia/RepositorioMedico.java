@@ -13,7 +13,7 @@ import java.util.List;
 //Esta persistencia es un plan b...
 
 
-public class PersistenciaMedico {
+public class RepositorioMedico {
 
     private static final String ARCHIVO =
         System.getProperty("user.dir") + File.separator + "medicos.json";
@@ -25,7 +25,7 @@ public class PersistenciaMedico {
     public static void guardar(List<Medico> lista) {
         try (Writer writer = new FileWriter(ARCHIVO)) {
             gson.toJson(lista, writer);
-            System.out.println("✅ Médicos guardados correctamente en: " + ARCHIVO);
+            System.out.println(" Médicos guardados correctamente en: " + ARCHIVO);
         } catch (IOException e) {
             e.printStackTrace();
         }
