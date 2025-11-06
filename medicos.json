@@ -22,5 +22,13 @@
       "nombre": "Pediatría"
     },
     "contrasena": "1234"
+  },
+  {
+    "cedula": "123456",
+    "nombre": "juan",
+    "especialidad": {
+      "nombre": "Cardiología"
+    },
+    "contrasena": "123"
   }
 ]

@@ -146,7 +146,7 @@ public class VentanaIniciarSesion extends JFrame {
                         IHistorialService gestorHistorial = new GestorHistorial(gestorCita);
                         ArrayList<Cita> citas = (ArrayList<Cita>) gestorCita.consultarCitasMedico(medico);
 
-                        // Crear panel de citas
+                        // Crear panel del médico
                         PanelCitasMedico panelMedico = new PanelCitasMedico(citas, gestorCita, gestorHistorial, medico);
                         setContentPane(panelMedico);
                         revalidate();

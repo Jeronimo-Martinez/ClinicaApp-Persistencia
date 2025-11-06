@@ -23,7 +23,6 @@ import javax.swing.table.DefaultTableModel;
  * @author jmart
  */
 
-
 public class PanelCitasMedico extends JPanel {
 
     private IHistorialService gestorHistorial;
@@ -45,7 +44,7 @@ public class PanelCitasMedico extends JPanel {
     }
 
     private void initComponents(List<Cita> citas) {
-        // Componentes
+        // Componentes principales
         JLabel lblCitas = new JLabel("Citas Pendientes:");
         JLabel lblDiag = new JLabel("Diagnóstico:");
         JLabel lblId = new JLabel("ID Cita:");
@@ -55,16 +54,18 @@ public class PanelCitasMedico extends JPanel {
 
         JButton btnSubir = new JButton("Subir Diagnóstico");
         JButton btnHistorial = new JButton("Ver Historial");
+        JButton btnVolver = new JButton("Cerrar sesión"); // 🔹 Nuevo botón
 
-        modelotabla = new DefaultTableModel(new Object[]{"ID", "Fecha", "Paciente", "Médico"},0);
+        // Tabla de citas
+        modelotabla = new DefaultTableModel(new Object[]{"ID", "Fecha", "Paciente", "Médico"}, 0);
         tablaCitas = new JTable(modelotabla);
         tablaCitas.setRowHeight(32);
         cargarCitas(citas);
         JScrollPane scrollTabla = new JScrollPane(tablaCitas);
 
-        // Panel para historial
+        // Panel dinámico (para mostrar historial)
         panelDinamico = new JPanel(new BorderLayout());
-        panelDinamico.setPreferredSize(new Dimension(400,300));
+        panelDinamico.setPreferredSize(new Dimension(400, 300));
 
         // Layout tipo NetBeans (GroupLayout)
         GroupLayout layout = new GroupLayout(this);
@@ -82,7 +83,8 @@ public class PanelCitasMedico extends JPanel {
                     .addComponent(lblId)
                     .addComponent(idCita, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSubir)
-                    .addComponent(btnHistorial))
+                    .addComponent(btnHistorial)
+                    .addComponent(btnVolver)) // 🔹 agregado
                 .addComponent(panelDinamico)
         );
 
@@ -96,13 +98,24 @@ public class PanelCitasMedico extends JPanel {
                     .addComponent(lblId)
                     .addComponent(idCita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSubir)
-                    .addComponent(btnHistorial))
+                    .addComponent(btnHistorial)
+                    .addComponent(btnVolver)) // 🔹 agregado
                 .addComponent(panelDinamico, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
         );
 
         // Acciones de botones
         btnSubir.addActionListener(e -> subirDiagnostico());
         btnHistorial.addActionListener(e -> abrirHistorial());
+
+        // 🔹 Acción del botón Cerrar sesión
+        btnVolver.addActionListener(e -> {
+            JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
+            ventana.dispose(); // Cierra la ventana actual
+
+            // Abre la ventana de inicio de sesión
+            VentanaIniciarSesion login = new VentanaIniciarSesion();
+            login.setVisible(true);
+        });
     }
 
     private void cargarCitas(List<Cita> citas) {
@@ -128,7 +141,7 @@ public class PanelCitasMedico extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "Cita no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al subir diagnóstico: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
