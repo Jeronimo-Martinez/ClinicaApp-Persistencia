@@ -4,20 +4,22 @@
  */
 package com.mycompany.clinicaapp.Presentacion.AdminMedicos;
 
-import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
-import com.mycompany.clinicaapp.Interfaces.IMedicoService;
-import com.mycompany.clinicaapp.Modelos.Medico;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.ActivadorJtableMedicoBotones;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.EventosParaBotones;
-import com.mycompany.clinicaapp.Utilidades.AdminMedica.RenderizadoTablaMedico;
 import java.awt.Color;
 import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.mycompany.clinicaapp.Interfaces.IInterfazAdminMedica;
+import com.mycompany.clinicaapp.Interfaces.IMedicoService;
+import com.mycompany.clinicaapp.Modelos.Medico;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.ActivadorJtableMedicoBotones;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.EventosParaBotones;
+import com.mycompany.clinicaapp.Utilidades.AdminMedica.RenderizadoTablaMedico;
 
 /**
  *
@@ -28,17 +30,20 @@ public class VentanaMedica extends javax.swing.JPanel {
    private final IInterfazAdminMedica interfazAdmin;
    List<Medico> medicos;
    public void llenarFilas (){
-       medicos = medicoService.listaMedicos();
+       // Actualizar la lista de médicos antes de llenar la tabla
+       this.medicos = medicoService.listaMedicos();
         
-
-        DefaultTableModel model = (DefaultTableModel) tablaMedica.getModel();
-        model.setRowCount(0);
-        for (Medico m : medicos) {
-            model.addRow(new Object[]{
-                m.getNombre(),
-                m.getCedula(),
-                m.getEspecialidad().getNombre(),});
-        }
+       DefaultTableModel model = (DefaultTableModel) tablaMedica.getModel();
+       model.setRowCount(0); // Limpiar tabla
+       // Llenar con datos actualizados
+       for (Medico m : medicos) {
+           model.addRow(new Object[]{
+               m.getNombre(),
+               m.getCedula(),
+               m.getEspecialidad().getNombre(),});
+       }
+       // Notificar cambios en la tabla
+       model.fireTableDataChanged();
    }
    
     public VentanaMedica(IMedicoService medicoService, IInterfazAdminMedica interfazAdmin) {
@@ -47,6 +52,8 @@ public class VentanaMedica extends javax.swing.JPanel {
         this.medicos=medicoService.listaMedicos();
         initComponents();
         llenarFilas();
+        // Actualizar la lista de médicos antes de llenar la tabla
+        this.medicos = medicoService.listaMedicos();
         
 
         setBorder(BorderFactory.createTitledBorder(
@@ -180,7 +187,10 @@ public class VentanaMedica extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // Volver al panel del administrador usando la interfaz
+        if (interfazAdmin != null) {
+            interfazAdmin.volverAlMenu();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
