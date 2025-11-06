@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import com.mycompany.clinicaapp.Presentacion.AdminMedicos.VentanaMedica;
+
      
 /**
  * Este panel está encargado de mostrar el historial clínico de un paciente.
@@ -20,14 +20,14 @@ public class PanelHistorial extends JPanel {
     private JButton btnBuscarHistorial;
     private JButton btnVolver;
     private JTable tablaHistorial;
-    private final VentanaMedica ventanaMedica; // referencia para volver
+    private final PanelCitasMedico ventanaMedica; // referencia para volver
 
     /**
      * Constructor del panel de historial.
      * @param gestorHistorial 
      * @param ventanaMedica 
      */
-     public PanelHistorial(IHistorialService gestorHistorial, VentanaMedica ventanaMedica) {
+     public PanelHistorial(IHistorialService gestorHistorial, PanelCitasMedico ventanaMedica) {
         this.gestorHistorial = gestorHistorial;
         this.ventanaMedica = ventanaMedica;
         inicializarComponentes();
@@ -147,22 +147,8 @@ public class PanelHistorial extends JPanel {
      * Reemplaza el panel actual por la VentanaMedica.
      */
     private void volverAlMenuMedico() {
-        // Intentar reemplazar el contenido del JFrame contenedor si existe
-        java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(this);
-        if (win instanceof javax.swing.JFrame) {
-            javax.swing.JFrame frame = (javax.swing.JFrame) win;
-            frame.setContentPane(ventanaMedica);
-            frame.revalidate();
-            frame.repaint();
-            return;
-        }
-        // Fallback: si no hay JFrame, intentar con el padre inmediato
-        Container contenedor = getParent();
-        if (contenedor != null) {
-            contenedor.removeAll();
-            contenedor.add(ventanaMedica);
-            contenedor.revalidate();
-            contenedor.repaint();
-        }
+        if (ventanaMedica != null) {
+        ventanaMedica.mostrarPanelCitas(); // limpia el panel dinámico y vuelve a mostrar la tabla de citas
     }
+}
 }

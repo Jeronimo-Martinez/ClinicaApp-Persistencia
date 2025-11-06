@@ -4,6 +4,7 @@ import com.mycompany.clinicaapp.Interfaces.*;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorAdministrador;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorCita;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorEspecialidad;
+import com.mycompany.clinicaapp.LogicaDelNegocio.GestorHistorial;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorInicioSesion;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorMedico;
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorPaciente;
@@ -12,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class VentanaIniciarSesion extends JFrame {
 
@@ -147,9 +149,22 @@ public class VentanaIniciarSesion extends JFrame {
                     pack();
                     setLocationRelativeTo(null);
                 } else if (usuario instanceof Medico){
-                    // panel a poner
+                        Medico medico = (Medico) usuario;
+
+                        // Crear gestores
+                        IHistorialService gestorHistorial = new GestorHistorial(gestorCita);
+                        ArrayList<Cita> citas = (ArrayList<Cita>) gestorCita.consultarCitasMedico(medico);
+
+                        // Crear panel del médico
+                        PanelCitasMedico panelMedico = new PanelCitasMedico(citas, gestorCita, gestorHistorial, medico);
+                        setContentPane(panelMedico);
+                        revalidate();
+                        repaint();
+                        pack();
+                        setLocationRelativeTo(null);
+                        
+                    }
                 }
-            }
         });
 
         btnRegistrarse.addActionListener(new ActionListener() {

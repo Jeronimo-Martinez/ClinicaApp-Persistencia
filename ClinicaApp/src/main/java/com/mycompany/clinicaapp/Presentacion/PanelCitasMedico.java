@@ -5,321 +5,172 @@
 package com.mycompany.clinicaapp.Presentacion;
 
 import com.mycompany.clinicaapp.LogicaDelNegocio.GestorCita;
+import com.mycompany.clinicaapp.Interfaces.IHistorialService;
 import com.mycompany.clinicaapp.Modelos.Cita;
 import com.mycompany.clinicaapp.Modelos.Medico;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
  * @author jmart
  */
-public class PanelCitasMedico extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PanelCitasPaciente
-     * @param citas
-     */
-    private DefaultTableModel modelotabla;
+public class PanelCitasMedico extends JPanel {
+
+    private IHistorialService gestorHistorial;
     private GestorCita gestor;
-    public PanelCitasMedico(List<Cita> citas, GestorCita gestor, Medico medico ) {
-        initComponents();
-        // Obtener dimensiones de la pantalla
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        
-        // Calcular la mitad del ancho y alto
-        int width = screenSize.width* 1/2;
-        int height = screenSize.height* 1/2;
-        
-        // Centrar la ventana
-        int x = (screenSize.width - width) / 2;
-        int y = (screenSize.height - height) / 2;
-        
-        // Establecer tamaño y posición
-        this.setBounds(x, y, width, height);
+    private Medico medico;
+    private DefaultTableModel modelotabla;
+
+    private JTable tablaCitas;
+    private JTextField diagnostico;
+    private JTextField idCita;
+    private JPanel panelDinamico;
+
+    public PanelCitasMedico(List<Cita> citas, GestorCita gestor, IHistorialService gestorHistorial, Medico medico) {
         this.gestor = gestor;
-        configurarTabla();
-        cargarCitas(citas);
+        this.gestorHistorial = gestorHistorial;
+        this.medico = medico;
+
+        initComponents(citas);
+    }
+
+    private void initComponents(List<Cita> citas) {
+        // Componentes principales
+        JLabel lblCitas = new JLabel("Citas Pendientes:");
+        JLabel lblDiag = new JLabel("Diagnóstico:");
+        JLabel lblId = new JLabel("ID Cita:");
+
+        diagnostico = new JTextField();
+        idCita = new JTextField();
+
+        JButton btnSubir = new JButton("Subir Diagnóstico");
+        JButton btnHistorial = new JButton("Ver Historial");
+        JButton btnVolver = new JButton("Cerrar sesión"); // 🔹 Nuevo botón
+
+        // Tabla de citas
+        modelotabla = new DefaultTableModel(new Object[]{"ID", "Fecha", "Paciente", "Médico"}, 0);
+        tablaCitas = new JTable(modelotabla);
         tablaCitas.setRowHeight(32);
-        
-        
-       // TableColumn colAcciones = tablaCitas.getColumn("Acciones");
-       // colAcciones.setCellRenderer(new BotonTablaCita(gestor, tablaCitas));
-       // colAcciones.setCellEditor(new BotonTablaCita(gestor, tablaCitas));
+        cargarCitas(citas);
+        JScrollPane scrollTabla = new JScrollPane(tablaCitas);
 
-        
-        
-    }
+        // Panel dinámico (para mostrar historial)
+        panelDinamico = new JPanel(new BorderLayout());
+        panelDinamico.setPreferredSize(new Dimension(400, 300));
 
-    private PanelCitasMedico() {
-        initComponents();
-    }
-    public void refrescarTabla() {
-    // Limpia el modelo de la tabla
-    DefaultTableModel modelo = (DefaultTableModel) tablaCitas.getModel();
-    modelo.setRowCount(0);
+        // Layout tipo NetBeans (GroupLayout)
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
-    // Vuelve a obtener las citas actualizadas 
-    List<Cita> citasActualizadas = gestor.getCitas(); // o el método que uses
-    
-    // Agrega las filas nuevamente
-    for (Cita c : citasActualizadas) {
-        modelo.addRow(new Object[]{
-            c.getId(),
-            c.getFecha().toString(),
-            c.getPaciente().getNombre(),
-            c.getMedico().getNombre()
-            //"Acciones"
-        });
-    }
-        //TableColumn colAcciones = tablaCitas.getColumn("Acciones");
-        //colAcciones.setCellRenderer(new BotonTablaCita(gestor, tablaCitas));
-        //colAcciones.setCellEditor(new BotonTablaCita(gestor, tablaCitas));
-    }
-
-  
-    private void configurarTabla(){
-        modelotabla = new DefaultTableModel(new Object[]{"ID", "Fecha", "Paciente", "Médico",},0){
-            
-        /*    @Override
-        public boolean isCellEditable(int fila, int columna) {
-            // Evita que el usuario edite las celdas 
-            return columna == 4; // solo la columna de botones debe permitir interaccion
-        } */
-        };
-        tablaCitas.setModel(modelotabla);
-
-    }
-    private void cargarCitas(List<Cita> citas) {
-    modelotabla.setRowCount(0); // limpia tabla
-    for (Cita c : citas) {
-        modelotabla.addRow(new Object[]{
-            c.getId(),
-            c.getFecha(),
-            c.getPaciente().getNombre(),
-            c.getMedico().getNombre()
-            //"Acciones"
-        });
-    }
-}
-
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        botonSubir = new javax.swing.JButton();
-        diagnostico = new javax.swing.JTextField();
-        idCita = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaCitas = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel1.setText("Editar Diagnostico:");
-
-        jLabel2.setText("Diagnostico: ");
-
-        jLabel3.setText("ID Cita:");
-
-        botonSubir.setText("Subir Diagnostico");
-        botonSubir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonSubirActionPerformed(evt);
-            }
-        });
-
-        diagnostico.setText("\"is't never lupus\"");
-
-        idCita.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idCitaActionPerformed(evt);
-            }
-        });
-
-        tablaCitas.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(tablaCitas);
-
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel4.setText("Citas Pendientes : ");
-
-        jButton1.setText("Cerrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(diagnostico, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(botonSubir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(idCita, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(lblCitas)
+                .addComponent(scrollTabla)
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(lblDiag)
+                    .addComponent(diagnostico, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblId)
+                    .addComponent(idCita, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSubir)
+                    .addComponent(btnHistorial)
+                    .addComponent(btnVolver)) // 🔹 agregado
+                .addComponent(panelDinamico)
         );
+
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(diagnostico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(idCita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonSubir)
-                    .addComponent(jButton1))
-                .addContainerGap())
+            layout.createSequentialGroup()
+                .addComponent(lblCitas)
+                .addComponent(scrollTabla, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDiag)
+                    .addComponent(diagnostico, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblId)
+                    .addComponent(idCita, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSubir)
+                    .addComponent(btnHistorial)
+                    .addComponent(btnVolver)) // 🔹 agregado
+                .addComponent(panelDinamico, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
         );
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+        // Acciones de botones
+        btnSubir.addActionListener(e -> subirDiagnostico());
+        btnHistorial.addActionListener(e -> abrirHistorial());
 
-    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        VentanaIniciarSesion ventana = new VentanaIniciarSesion();
-        ventana.setVisible(true);
-        ventana.setLocationRelativeTo(null); 
-        this.dispose();
-        // TODO : Modificar ventana anterior 
-    }//GEN-LAST:event_botonVolverActionPerformed
+        // 🔹 Acción del botón Cerrar sesión
+        btnVolver.addActionListener(e -> {
+            JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
+            ventana.dispose(); // Cierra la ventana actual
 
-    private void botonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_botonCerrarActionPerformed
-
-    private void botonSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubirActionPerformed
-        try{
-            String idCita = this.idCita.getText();
-            String diagnostico = this.diagnostico.getText();
-            Cita cita = gestor.buscarCitaPorId(idCita);
-            cita.setDiagnostico(diagnostico);
-            if (cita.getDiagnostico() != null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Diagnostico registrada exitosamente", 
-                    "Éxito", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog(this, 
-                    "Error al regitrar Diagnostico", 
-                    "Error", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        }catch(Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al procesar la solicitud: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);}
-            
-    }//GEN-LAST:event_botonSubirActionPerformed
-
-    private void idCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idCitaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_idCitaActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanelCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanelCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanelCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PanelCitasPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PanelCitasMedico().setVisible(true);
-            }
+            // Abre la ventana de inicio de sesión
+            VentanaIniciarSesion login = new VentanaIniciarSesion();
+            login.setVisible(true);
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonSubir;
-    private javax.swing.JTextField diagnostico;
-    private javax.swing.JTextField idCita;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaCitas;
-    // End of variables declaration//GEN-END:variables
+    private void cargarCitas(List<Cita> citas) {
+        modelotabla.setRowCount(0);
+        for (Cita c : citas) {
+            modelotabla.addRow(new Object[]{
+                c.getId(),
+                c.getFecha(),
+                c.getPaciente().getNombre(),
+                c.getMedico().getNombre()
+            });
+        }
+    }
+
+    private void subirDiagnostico() {
+        try {
+            String id = idCita.getText().trim();
+            String diag = diagnostico.getText().trim();
+            Cita cita = gestor.buscarCitaPorId(id);
+            if (cita != null) {
+                cita.setDiagnostico(diag);
+                JOptionPane.showMessageDialog(this, "Diagnóstico registrado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Cita no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al subir diagnóstico: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void abrirHistorial() {
+        PanelHistorial panelHistorial = new PanelHistorial(gestorHistorial, this);
+        panelDinamico.removeAll();
+        panelDinamico.add(panelHistorial, BorderLayout.CENTER);
+        panelDinamico.revalidate();
+        panelDinamico.repaint();
+    }
+
+    public void mostrarPanelCitas() {
+        panelDinamico.removeAll();
+        panelDinamico.revalidate();
+        panelDinamico.repaint();
+    }
+
+    public void refrescarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tablaCitas.getModel();
+        modelo.setRowCount(0);
+        List<Cita> citasActualizadas = gestor.getCitas();
+        for (Cita c : citasActualizadas) {
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getFecha(),
+                c.getPaciente().getNombre(),
+                c.getMedico().getNombre()
+            });
+        }
+    }
 }

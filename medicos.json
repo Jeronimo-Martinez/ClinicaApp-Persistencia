@@ -1,0 +1,34 @@
+[
+  {
+    "cedula": "1111",
+    "nombre": "Andrés Gómez",
+    "especialidad": {
+      "nombre": "Cardiología"
+    },
+    "contrasena": "1111"
+  },
+  {
+    "cedula": "2222",
+    "nombre": "Laura Torres",
+    "especialidad": {
+      "nombre": "Medicina General"
+    },
+    "contrasena": "2222"
+  },
+  {
+    "cedula": "134",
+    "nombre": "luis",
+    "especialidad": {
+      "nombre": "Pediatría"
+    },
+    "contrasena": "1234"
+  },
+  {
+    "cedula": "123456",
+    "nombre": "juan",
+    "especialidad": {
+      "nombre": "Cardiología"
+    },
+    "contrasena": "123"
+  }
+]
