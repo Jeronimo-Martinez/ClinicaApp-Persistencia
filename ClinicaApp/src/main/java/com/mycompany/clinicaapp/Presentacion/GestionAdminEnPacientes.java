@@ -58,7 +58,7 @@ public class GestionAdminEnPacientes extends JPanel {
         add(panelForm, BorderLayout.NORTH);
 
         // Tabla central
-        String[] columnas = {"Cédula", "Nombre", "Dirección", "Teléfono"};
+        String[] columnas = {"Cédula", "Nombre", "Edad", "Teléfono"};
         modeloTabla = new DefaultTableModel(columnas, 0);
         tablaPacientes = new JTable(modeloTabla);
         add(new JScrollPane(tablaPacientes), BorderLayout.CENTER);
