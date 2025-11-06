@@ -1,5 +1,6 @@
 package com.mycompany.clinicaapp.Persistencia;
 
+import com.mycompany.clinicaapp.Interfaces.IRepositorioMedico;
 import com.mycompany.clinicaapp.Modelos.Medico;
 import java.io.*;
 import com.google.gson.Gson;
@@ -13,16 +14,16 @@ import java.util.List;
 //Esta persistencia es un plan b...
 
 
-public class RepositorioMedico {
+public class RepositorioMedico implements IRepositorioMedico{
 
     private static final String ARCHIVO =
         System.getProperty("user.dir") + File.separator + "medicos.json";
 
-    // 🔹 Crear instancia Gson con formato legible (pretty printing)
+    // Crear instancia Gson con formato legible (pretty printing)
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    // 🔹 Guardar lista de médicos
-    public static void guardar(List<Medico> lista) {
+    // Guardar lista de médicos
+    public void guardar(List<Medico> lista) {
         try (Writer writer = new FileWriter(ARCHIVO)) {
             gson.toJson(lista, writer);
             System.out.println(" Médicos guardados correctamente en: " + ARCHIVO);
@@ -32,7 +33,7 @@ public class RepositorioMedico {
     }
 
     
-    public static List<Medico> cargar() {
+    public List<Medico> cargar() {
         File archivo = new File(ARCHIVO);
 
         if (!archivo.exists()) {
