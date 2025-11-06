@@ -130,6 +130,15 @@ public class VentanaIniciarSesion extends JFrame {
                     revalidate();
                     repaint();
 
+                } else if (usuario instanceof Medico) {
+                    Medico medico = (Medico) usuario;
+                    // Obtener las citas del médico y abrir su panel
+                    java.util.List<com.mycompany.clinicaapp.Modelos.Cita> citasMedico = gestorCita.consultarCitasMedico(medico);
+                    PanelCitasMedico panelMedico = new PanelCitasMedico(citasMedico, gestorCita, medico);
+                    panelMedico.setVisible(true);
+                    // Cerrar ventana de inicio de sesión
+                    dispose();
+
                 } else if (usuario instanceof Administrador) {
                     PanelAdministrador panelAdmin = new PanelAdministrador(gestorAdmin);
                     setContentPane(panelAdmin);
