@@ -15,8 +15,5 @@ public interface IInterfazAdminMedica {
     void mostrarVentanaAgregarMedico();
     void mostrarVentanaEditarMedico(Medico medico);
     void actualizarTablaMedicos();
-    
-    
-    
-    
+    void volverAlMenu();
 }

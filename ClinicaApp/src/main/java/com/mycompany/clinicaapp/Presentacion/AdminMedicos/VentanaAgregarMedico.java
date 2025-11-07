@@ -176,18 +176,24 @@ public class VentanaAgregarMedico extends javax.swing.JPanel {
     Especialidad esp= new Especialidad(nombreEspecialidad);
     Medico medico= new Medico(cedulaMedico,nombreMedico , esp, contrasenaMedico);
     
-        medicoService.agregarMedic(medico);    
-        JOptionPane.showMessageDialog(this, "Se ha agregado un nuevo médico",null,JOptionPane.INFORMATION_MESSAGE);
-        VentanaMedica panel = new VentanaMedica(medicoService, interfazAdmin);
-                    panel.setSize(this.getSize());
-                    panel.setLocation(0, 0);
-                    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
-                    if (window instanceof JFrame frame) {
-                        frame.setTitle("");
-                        frame.setContentPane(panel);
-                        frame.revalidate();
-                        frame.repaint();
-                    }
+    medicoService.agregarMedic(medico);    
+    JOptionPane.showMessageDialog(this, "Se ha agregado un nuevo médico",null,JOptionPane.INFORMATION_MESSAGE);
+    
+    // Crear y configurar la nueva ventana médica
+    VentanaMedica panel = new VentanaMedica(medicoService, interfazAdmin);
+    panel.setSize(this.getSize());
+    panel.setLocation(0, 0);
+    
+    // Obtener la ventana actual y actualizar su contenido
+    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+    if (window instanceof JFrame frame) {
+        frame.setTitle("");
+        frame.setContentPane(panel);
+        // Asegurarnos de que la tabla se actualice
+        panel.llenarFilas();
+        frame.revalidate();
+        frame.repaint();
+    }
         
         
     

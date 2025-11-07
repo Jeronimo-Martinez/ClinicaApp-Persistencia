@@ -91,5 +91,7 @@ public class GestorMedico implements IMedicoService {
         }
         return null;
     }
+
+    // Nota: la autenticación se realiza en GestorInicioSesion usando buscarPorCedula + comparación de contraseña
 }
 
