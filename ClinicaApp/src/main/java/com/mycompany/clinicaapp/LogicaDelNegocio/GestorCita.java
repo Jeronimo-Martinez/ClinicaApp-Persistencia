@@ -4,16 +4,16 @@
  */
 package com.mycompany.clinicaapp.LogicaDelNegocio;
 
-import com.mycompany.clinicaapp.Interfaces.IGestorCita;
-import com.mycompany.clinicaapp.Modelos.Paciente;
-import com.mycompany.clinicaapp.Modelos.Especialidad;
-import com.mycompany.clinicaapp.Modelos.Medico;
-import com.mycompany.clinicaapp.Modelos.Cita;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
+import com.mycompany.clinicaapp.Interfaces.IGestorCita;
+import com.mycompany.clinicaapp.Modelos.Cita;
+import com.mycompany.clinicaapp.Modelos.Especialidad;
+import com.mycompany.clinicaapp.Modelos.Medico;
+import com.mycompany.clinicaapp.Modelos.Paciente;
 
 /**
  *
@@ -57,8 +57,10 @@ public class GestorCita implements IGestorCita {
         @Override
         public List<Cita> consultarCitasPaciente(Paciente paciente){
         try {
-            return this.listaCitas.stream().filter(c -> c.getPaciente() == paciente).collect(Collectors.toList()); // haskell me traumo con los maps y filter ;-;
-        }catch (Exception exception) {
+            return this.listaCitas.stream()
+                    .filter(c -> c.getPaciente() != null && paciente != null && c.getPaciente().getCedula().equals(paciente.getCedula()))
+                    .collect(Collectors.toList());
+        } catch (Exception exception) {
             System.out.println("Error inesperado");
             return null;
         }
@@ -68,8 +70,10 @@ public class GestorCita implements IGestorCita {
         @Override
         public List<Cita> consultarCitasMedico(Medico medico){
         try {
-            return this.listaCitas.stream().filter(c -> c.getMedico() == medico).collect(Collectors.toList()); // haskell me traumo con los maps y filter ;-;
-        }catch (Exception exception) {
+            return this.listaCitas.stream()
+                    .filter(c -> c.getMedico() != null && medico != null && c.getMedico().getCedula().equals(medico.getCedula()))
+                    .collect(Collectors.toList());
+        } catch (Exception exception) {
             System.out.println("Error inesperado");
             return null;
         }
@@ -86,7 +90,7 @@ public class GestorCita implements IGestorCita {
         @Override
         public boolean eliminarCita(String idCita) {
         try {
-            return this.listaCitas.removeIf(c -> c.getId() == idCita); // la funcion remove if retorna un valor booleano dependiendo de si se elimino o no un elemento de la lista 
+            return this.listaCitas.removeIf(c -> c.getId() != null && c.getId().equals(idCita)); // la funcion remove if retorna un valor booleano dependiendo de si se elimino o no un elemento de la lista 
         }catch (Exception exception) {                                  
             System.out.println("Error inesperado");
             return false;
