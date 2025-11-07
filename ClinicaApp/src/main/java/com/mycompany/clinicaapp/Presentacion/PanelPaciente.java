@@ -185,6 +185,10 @@ public class PanelPaciente extends JPanel {
                             JOptionPane.showMessageDialog(PanelPaciente.this, "La edad debe ser un número positivo", "Advertencia", JOptionPane.WARNING_MESSAGE);
                             return;
                         }
+                        if (edadValidacionNumero >= 120){
+                            JOptionPane.showMessageDialog(PanelPaciente.this, "Edad fuera del rango permitido", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(PanelPaciente.this, "La edad debe ser un número", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return; // evitar continuar y provocar crash
@@ -198,11 +202,13 @@ public class PanelPaciente extends JPanel {
 
                     // Se comprueba que la cédula sean números positivos
                     if (!cedula.matches("^\\d+$")) {
+                        JOptionPane.showMessageDialog(PanelPaciente.this, "Cédula no válida", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     // Se comprueba que el teléfono sean números positivos
-                    if (!telefono.matches("^\\d+$")) {
+                    if (!telefono.matches("^\\d{10}$")) {
+                        JOptionPane.showMessageDialog(PanelPaciente.this, "Teléfono no válido", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 

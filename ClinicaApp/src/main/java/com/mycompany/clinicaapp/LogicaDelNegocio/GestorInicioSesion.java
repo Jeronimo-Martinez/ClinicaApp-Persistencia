@@ -9,7 +9,7 @@ public class GestorInicioSesion implements IInicioSesionService {
     private final IMedicoService gestorMedico;
     private final IGestorAdministrador gestorAdmin;
 
-    // 🔹 Constructor con inyección de dependencias (principio de inversión)
+    // Constructor con inyección de dependencias (principio de inversión)
     public GestorInicioSesion(IPacienteService gestorPaciente,
                               IMedicoService gestorMedico,
                               IGestorAdministrador gestorAdmin) {
