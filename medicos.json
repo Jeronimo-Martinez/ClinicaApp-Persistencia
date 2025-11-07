@@ -30,5 +30,13 @@
       "nombre": "Cardiología"
     },
     "contrasena": "123"
+  },
+  {
+    "cedula": "1234",
+    "nombre": "sofia",
+    "especialidad": {
+      "nombre": "Cardiología"
+    },
+    "contrasena": "1234"
   }
 ]
