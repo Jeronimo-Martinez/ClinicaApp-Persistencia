@@ -57,11 +57,37 @@ public class GestorMedico implements IMedicoService {
     // 🔹 Editar un médico
     @Override
     public boolean editarMedico(Medico medico, String nuevoNombre, Especialidad nuevaEspecialidad) {
-        medico.setNombre(nuevoNombre);
-        medico.setEspecialidad(nuevaEspecialidad);
+        // Validar datos de entrada
+        if (medico == null || nuevoNombre == null || nuevaEspecialidad == null) {
+            System.err.println("Error: datos nulos al intentar editar un médico.");
+            return false;
+        }
+
+        // Buscar el médico existente en la lista
+        Medico medicoExistente = null;
+        for (Medico m : listaMedicos) {
+            if (m.getCedula().equals(medico.getCedula())) {
+                medicoExistente = m;
+                break;
+            }
+        }
+
+        // Si no se encontró, no se puede editar
+        if (medicoExistente == null) {
+            System.err.println("No se encontró el médico con cédula: " + medico.getCedula());
+            return false;
+        }
+
+        // Actualizar datos
+        medicoExistente.setNombre(nuevoNombre);
+        medicoExistente.setEspecialidad(nuevaEspecialidad);
+
+        // Guardar cambios en el repositorio
         repositorio.guardar(listaMedicos);
+
         return true;
     }
+
 
     // 🔹 Agregar un nuevo médico
     @Override
