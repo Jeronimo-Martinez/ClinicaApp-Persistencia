@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
 import java.util.List;
 
 public class PanelPaciente extends JPanel {
@@ -38,10 +36,13 @@ public class PanelPaciente extends JPanel {
         this.pacienteAutenticado = pacienteAutenticado;
         this.ventanaPrincipal = ventanaPrincipal;
         inicializarComponentes();
-        configurarEstilodelPanelPaciente();
-        configurarEventosdelPanelPaciente();
+        configurarEstiloDelPanelPaciente();
+        configurarEventosDelPanelPaciente();
     }
 
+    /**
+     * Este método inicializa las componentes del panelPaciente
+     */
     private void inicializarComponentes() {
         setLayout(new BorderLayout(15, 15));
         setBackground(new Color(245, 247, 252));
@@ -50,6 +51,11 @@ public class PanelPaciente extends JPanel {
         add(crearPanelDatosPaciente(), BorderLayout.CENTER);
         add(crearPanelBotones(), BorderLayout.SOUTH);
     }
+
+    /**
+     * Este método crea el panelDatosPaciente
+     * @return panelDatos
+     */
 
     private JPanel crearPanelDatosPaciente() {
         JPanel panelDatos = new JPanel (new GridLayout(4, 2, 12, 12));
@@ -74,6 +80,11 @@ public class PanelPaciente extends JPanel {
         return panelDatos;
     }
 
+    /**
+     * Este método crea el panelBotones
+     * @return panelBotones
+     * 
+     */
     private JPanel crearPanelBotones() {
         JPanel panelBotones = new JPanel(new GridLayout(1, 4, 10, 10));
 
@@ -90,7 +101,10 @@ public class PanelPaciente extends JPanel {
         return panelBotones;
     }
 
-    private void configurarEstilodelPanelPaciente() {
+    /**
+     * Este método configura el estilo del panelPaciente
+     */
+    private void configurarEstiloDelPanelPaciente() {
 
         // Creación de Fuentes
         Font fuenteTitulo = new Font("Roboto", Font.BOLD, 20);
@@ -116,7 +130,10 @@ public class PanelPaciente extends JPanel {
         btnCerrarSesion.setForeground(new Color(255, 255, 255));
     }
 
-    private void configurarEventosdelPanelPaciente() {
+    /**
+     * Este método configura los eventos del panelPaciente
+     */
+    private void configurarEventosDelPanelPaciente() {
 
         // Configutación del botón "Citas"
         btnCitas.addActionListener(new ActionListener() {
@@ -168,6 +185,10 @@ public class PanelPaciente extends JPanel {
                             JOptionPane.showMessageDialog(PanelPaciente.this, "La edad debe ser un número positivo", "Advertencia", JOptionPane.WARNING_MESSAGE);
                             return;
                         }
+                        if (edadValidacionNumero >= 120){
+                            JOptionPane.showMessageDialog(PanelPaciente.this, "Edad fuera del rango permitido", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(PanelPaciente.this, "La edad debe ser un número", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return; // evitar continuar y provocar crash
@@ -181,11 +202,13 @@ public class PanelPaciente extends JPanel {
 
                     // Se comprueba que la cédula sean números positivos
                     if (!cedula.matches("^\\d+$")) {
+                        JOptionPane.showMessageDialog(PanelPaciente.this, "Cédula no válida", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     // Se comprueba que el teléfono sean números positivos
-                    if (!telefono.matches("^\\d+$")) {
+                    if (!telefono.matches("^\\d{10}$")) {
+                        JOptionPane.showMessageDialog(PanelPaciente.this, "Teléfono no válido", "Advertencia", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
