@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mycompany.clinicaapp.Interfaces.IGestorCita;
+import com.mycompany.clinicaapp.Interfaces.IRepositorioCita;
+import com.mycompany.clinicaapp.Persistencia.RepositorioCita;
 import com.mycompany.clinicaapp.Modelos.Cita;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
@@ -21,31 +23,19 @@ import com.mycompany.clinicaapp.Modelos.Paciente;
  * @version 1.0.0
  */
 public class GestorCita implements IGestorCita {
-    private final ArrayList<Cita> listaCitas = new ArrayList<>(); 
-    
-    public GestorCita(){
-        // citas de ejemplo
-        Paciente p1 = new Paciente("0000", "Juan Pérez", "3001234567", 28, "0000");
-        Paciente p2 = new Paciente("1002","María Gómez","3003334444",25,"pass2");
-        Paciente p3 = new Paciente("1003","Carlos Ruiz","3005556666",40,"pass3");
-        
-        Especialidad e1 = new Especialidad("Medicina General");
-        Especialidad e2 = new Especialidad("Pediatría");
-        
-        Medico m1 = new Medico("2001","Dr. Suárez", e1, "m1pass");
-        Medico m2 = new Medico("2002","Dra. López", e2, "m2pass");
-        Medico m3 = new Medico("222", "Laura Torres",e1, "2222");
-        listaCitas.add(new Cita("001",LocalDate.of(2025, 10, 22),null, m1, p1));
-        listaCitas.add(new Cita("006",LocalDate.of(2025, 10, 22),null, m2, p1));
-        listaCitas.add(new Cita("004",LocalDate.of(2025, 10, 22),null, m3, p1));
-        listaCitas.add(new Cita("002",LocalDate.of(2025, 11, 5),null, m2, p2));
-        listaCitas.add(new Cita("003",LocalDate.of(2025, 12, 1),null, m1, p3));
-    
+    private List<Cita> citas;
+    private IRepositorioCita repositorio;
+
+    public GestorCita() {
+        this.repositorio = new RepositorioCita();
+        this.citas = repositorio.cargarCitas(); // Cargar citas al inicializar
     }
+
     @Override
     public boolean registrarCita(Cita c) {
         try {
-            listaCitas.add(c);
+            citas.add(c);
+            repositorio.agregarCita(c); // Guardar en JSON
             return true;
         }catch (Exception exception) {
             System.out.println("Error inesperado, no se pudo almacenar la cita");
@@ -57,7 +47,7 @@ public class GestorCita implements IGestorCita {
         @Override
         public List<Cita> consultarCitasPaciente(Paciente paciente){
         try {
-            return this.listaCitas.stream()
+            return this.citas.stream()
                     .filter(c -> c.getPaciente() != null && paciente != null && c.getPaciente().getCedula().equals(paciente.getCedula()))
                     .collect(Collectors.toList());
         } catch (Exception exception) {
@@ -70,7 +60,7 @@ public class GestorCita implements IGestorCita {
         @Override
         public List<Cita> consultarCitasMedico(Medico medico){
         try {
-            return this.listaCitas.stream()
+            return this.citas.stream()
                     .filter(c -> c.getMedico() != null && medico != null && c.getMedico().getCedula().equals(medico.getCedula()))
                     .collect(Collectors.toList());
         } catch (Exception exception) {
@@ -81,7 +71,7 @@ public class GestorCita implements IGestorCita {
         
         @Override
         public Cita buscarCitaPorId(String idCita) {
-            for (Cita c : listaCitas) {
+            for (Cita c : citas) {
                 if (c.getId().equals(idCita)) {
                      return c;
             }
@@ -90,7 +80,9 @@ public class GestorCita implements IGestorCita {
         @Override
         public boolean eliminarCita(String idCita) {
         try {
-            return this.listaCitas.removeIf(c -> c.getId() != null && c.getId().equals(idCita)); // la funcion remove if retorna un valor booleano dependiendo de si se elimino o no un elemento de la lista 
+            citas.removeIf(c -> c.getId().equals(idCita));
+            repositorio.eliminarCita(idCita); // Eliminar del JSON
+            return true;
         }catch (Exception exception) {                                  
             System.out.println("Error inesperado");
             return false;
@@ -99,10 +91,11 @@ public class GestorCita implements IGestorCita {
         @Override
         public boolean modificarCita(String idCita, Cita nueva) {
             try{
-                for(int i = 0 ; i < listaCitas.size(); i++){
-                    Cita c = listaCitas.get(i);
+                for(int i = 0 ; i < citas.size(); i++){
+                    Cita c = citas.get(i);
                     if (c.getId().equals(idCita)){
-                        listaCitas.set(i, nueva);
+                        citas.set(i, nueva);
+                        repositorio.actualizarCita(nueva); // Guardar cambios en JSON
                         return true;
                     
                 }  
@@ -113,7 +106,17 @@ public class GestorCita implements IGestorCita {
         }}
         @Override
          public List<Cita> getCitas() {
-            return listaCitas;
+            return citas;
 
     }
-    }   
+         @Override
+    public void cargarCitasjson() {
+        this.citas = repositorio.cargarCitas();
+    }
+
+    @Override
+    public void guardarCitasjson() {
+        repositorio.guardarCitas(citas);
+    }
+    }
+
