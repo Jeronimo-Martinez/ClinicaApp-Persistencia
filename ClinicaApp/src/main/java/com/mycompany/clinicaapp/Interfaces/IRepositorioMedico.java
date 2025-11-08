@@ -2,6 +2,11 @@ package com.mycompany.clinicaapp.Interfaces;
 import com.mycompany.clinicaapp.Modelos.Medico;
 import java.util.List;
 
+
+/**
+ * Esta interfaz se encarga de la persistencia de los médicos
+ * @author Silvana
+ */
 public interface IRepositorioMedico {
 
     /**

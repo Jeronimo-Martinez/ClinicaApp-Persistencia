@@ -1,6 +1,8 @@
 package com.mycompany.clinicaapp.LogicaDelNegocio;
 import com.mycompany.clinicaapp.Modelos.Paciente;
 import com.mycompany.clinicaapp.Interfaces.IPacienteService;
+import com.mycompany.clinicaapp.Interfaces.IRepositorioPaciente;
+import com.mycompany.clinicaapp.Persistencia.RepositorioPaciente;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,25 +13,25 @@ import java.util.List;
 
 public class GestorPaciente implements IPacienteService{
 
-    private List<Paciente> pacientes;
+    private final ArrayList<Paciente> listaPacientes;
+    private final IRepositorioPaciente repositorioPaciente;
 
     /**
      * Constructor por defecto 
      */
 
     public GestorPaciente() {
-        this.pacientes = new ArrayList<>();
-    }
+        this.repositorioPaciente = new RepositorioPaciente();
+        List<Paciente> pacientesCargados = repositorioPaciente.cargar();
+        this.listaPacientes = new ArrayList<>(pacientesCargados != null ? pacientesCargados : new ArrayList<>());
 
-    /**
-     * Constructor con parámetros
-     * 
-     * @param gestorPaciente
-     * @param pacientes
-     */
+        // Si la lista está vacía (primera vez, se crean pacientes por defecto)
+        if (listaPacientes.isEmpty()){
+            listaPacientes.add(new Paciente("1098453951", "Eliza", "3185249971", 21, "1111"));
+            listaPacientes.add(new Paciente("1096607451", "Carlos", "3182749841", 30, "2222"));
 
-    public GestorPaciente (List<Paciente> pacientes) {
-        this.pacientes = pacientes;
+            repositorioPaciente.guardar(listaPacientes);
+        }
     }
 
     /**
@@ -44,13 +46,14 @@ public class GestorPaciente implements IPacienteService{
             return false;
         }
 
-        for (Paciente pac : pacientes) {
+        for (Paciente pac : listaPacientes) {
             if (pac.getCedula().equals(paciente.getCedula())) {
                 return false; // si ya existe un paciente con esa cédula
             }
         }
         
-        pacientes.add(paciente);
+        listaPacientes.add(paciente);
+        repositorioPaciente.guardar(listaPacientes);
         return true;
     }
 
@@ -61,9 +64,10 @@ public class GestorPaciente implements IPacienteService{
      */
     @Override
     public boolean editarPaciente(Paciente paciente) {
-        for (int i=0; i < pacientes.size(); i++){
-            if (paciente.getCedula().equals(pacientes.get(i).getCedula())){
-                pacientes.set(i, paciente);
+        for (int i=0; i < listaPacientes.size(); i++){
+            if (paciente.getCedula().equals(listaPacientes.get(i).getCedula())){
+                listaPacientes.set(i, paciente);
+                repositorioPaciente.guardar(listaPacientes);
                 return true;
             }
         }
@@ -77,9 +81,10 @@ public class GestorPaciente implements IPacienteService{
      */
     @Override
     public boolean eliminarPaciente(Paciente paciente) {
-        for (int i=0; i < pacientes.size(); i++){
-            if (paciente.getCedula().equals(pacientes.get(i).getCedula())) {
-                pacientes.remove(i);
+        for (int i=0; i < listaPacientes.size(); i++){
+            if (paciente.getCedula().equals(listaPacientes.get(i).getCedula())) {
+                listaPacientes.remove(i);
+                repositorioPaciente.guardar(listaPacientes);
                 return true;
             }
         }
@@ -88,16 +93,21 @@ public class GestorPaciente implements IPacienteService{
 
     /**
      * Este método lista a los pacientes registrados
-     * @return pacientes (la lista de pacientes registrados)
+     * @return listaPacientes (una copia de la lista de pacientes registrados)
      */
     @Override
     public List<Paciente> listarPacientes() {
-        return pacientes;
+        return new ArrayList<>(listaPacientes);
     }
 
-  @Override
+    /**
+     * Este método busca a un paciente por medio de su cédula
+     * @param cedula cédula del paciente
+     * @return p (el paciente. En caso de que no se encuentre, retorna null)
+     */
+    @Override
     public Paciente buscarPorCedula(String cedula) {
-        for (Paciente p : pacientes) {
+        for (Paciente p : listaPacientes) {
             if (p.getCedula().equals(cedula)) {
                 return p;
             }
