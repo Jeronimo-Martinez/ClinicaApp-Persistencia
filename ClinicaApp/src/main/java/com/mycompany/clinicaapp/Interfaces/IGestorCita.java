@@ -22,5 +22,6 @@ public interface IGestorCita {
     boolean eliminarCita(String idCita);
     boolean modificarCita(String idCita, Cita nueva);
     List<Cita> getCitas();
-    
+    void cargarCitasjson();
+    void guardarCitasjson();
 }

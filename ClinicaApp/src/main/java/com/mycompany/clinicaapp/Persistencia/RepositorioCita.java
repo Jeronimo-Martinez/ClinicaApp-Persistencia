@@ -15,29 +15,34 @@ public class RepositorioCita implements IRepositorioCita {
     private final Gson gson;
 
     public RepositorioCita() {
-        this.gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .create();
+        this.gson = new GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd").create();
     }
 
     @Override
-    public void guardar(List<Cita> citas) {
-        try (Writer writer = new FileWriter(ARCHIVO_CITAS)) {
-            gson.toJson(citas, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean guardarCitas(List<Cita> citas) {
+        try  {
+            Writer writer = new FileWriter(ARCHIVO_CITAS);
+            var jsonToSave = gson.toJsonTree(citas);
+            gson.toJson(jsonToSave,writer);
+            writer.close();
+            System.out.println("citas guardadas exitosamente");
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error al guardar las citas");
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public List<Cita> cargar() {
+    public List<Cita> cargarCitas() {
         File archivo = new File(ARCHIVO_CITAS);
         if (!archivo.exists()) {
-            return new ArrayList<>();
+            return new ArrayList<>();//archivo no existe, se retorna lista vacia 
         }
 
-        try (Reader reader = new FileReader(ARCHIVO_CITAS)) {
+        try  {
+            Reader reader = new FileReader(ARCHIVO_CITAS);
             Type listType = new TypeToken<ArrayList<Cita>>(){}.getType();
             List<Cita> citas = gson.fromJson(reader, listType);
             return citas != null ? citas : new ArrayList<>();
@@ -48,28 +53,32 @@ public class RepositorioCita implements IRepositorioCita {
     }
 
     @Override
-    public void agregarCita(Cita cita) {
-        List<Cita> citas = cargar();
+    public boolean agregarCita(Cita cita) {
+        List<Cita> citas = cargarCitas();
         citas.add(cita);
-        guardar(citas);
+        if (guardarCitas(citas)){return true;}
+        return false
+        ;
     }
 
     @Override
-    public void actualizarCita(Cita citaActualizada) {
-        List<Cita> citas = cargar();
+    public boolean actualizarCita(Cita citaActualizada) {
+        List<Cita> citas = cargarCitas();
         for (int i = 0; i < citas.size(); i++) {
             if (citas.get(i).getId().equals(citaActualizada.getId())) {
                 citas.set(i, citaActualizada);
                 break;
             }
         }
-        guardar(citas);
+        if (guardarCitas(citas)){return true;}
+        return false;
     }
 
     @Override
-    public void eliminarCita(String idCita) {
-        List<Cita> citas = cargar();
+    public boolean eliminarCita(String idCita) {
+        List<Cita> citas = cargarCitas();
         citas.removeIf(c -> c.getId().equals(idCita));
-        guardar(citas);
+        if (guardarCitas(citas)){return true;}
+        return false;
     }
 }
