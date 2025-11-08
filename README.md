@@ -6,4 +6,4 @@ Integrantes:
 - Jhoan Sebastian Daza
  	
 Diagrama De Clases
-![alt text](UMLP.drawio.png)
+![alt text](UML-Persistencia.drawio.png)
