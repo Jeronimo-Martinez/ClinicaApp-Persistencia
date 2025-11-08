@@ -64,7 +64,7 @@ public class GestorAdminEnEspecialidad extends JPanel {
         }
         
         if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            JOptionPane.showMessageDialog(this, "La especialidad es incorrecta");
+            JOptionPane.showMessageDialog(this, "La especialidad es incorrecta. No debe contener números o símbolos");
             return;
 }
         //Crea la nueva especialidad y llama al gestor 
