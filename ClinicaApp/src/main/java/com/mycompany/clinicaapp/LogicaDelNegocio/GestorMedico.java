@@ -57,7 +57,7 @@ public class GestorMedico implements IMedicoService {
     // Editar un médico
     @Override
     public boolean editarMedico(Medico medico, String nuevoNombre, Especialidad nuevaEspecialidad) {
-       // Validar datos de entrada
+        // Validar datos de entrada
         if (medico == null || nuevoNombre == null || nuevaEspecialidad == null) {
             System.err.println("Error: datos nulos al intentar editar un médico.");
             return false;

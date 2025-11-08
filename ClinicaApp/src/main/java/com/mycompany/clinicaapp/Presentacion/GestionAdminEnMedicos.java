@@ -1,10 +1,7 @@
 package com.mycompany.clinicaapp.Presentacion;
-
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,10 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
 import com.mycompany.clinicaapp.Interfaces.IGestorAdministrador;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
+import javax.swing.*;
+import java.awt.*;
 
 
 
@@ -27,6 +25,8 @@ import com.mycompany.clinicaapp.Modelos.Medico;
  * Este panel es para las operaciones que puede hacer el administrador en la página en cuanto a los médicos, es decir, 
  * la creación, edición y eliminación de estos.
  */
+
+
 public class GestionAdminEnMedicos extends JPanel {
 
     private final IGestorAdministrador gestor;
@@ -40,69 +40,92 @@ public class GestionAdminEnMedicos extends JPanel {
     }
 
     /**
-     * Este método se encarga de inicializar los componentes gráficos del panel, como los botones, campos de texto, etc...
+     * Inicializa los componentes gráficos del panel con un diseño ordenado (GridBagLayout).
      */
     private void initComponents() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createTitledBorder("Gestión de Médicos"));
 
-    JPanel panelForm = new JPanel(new GridLayout(4, 2, 5, 5));
-        panelForm.add(new JLabel("Cédula:"));
-        txtCedula = new JTextField();
-        panelForm.add(txtCedula);
+        // ===== Panel del formulario =====
+        JPanel panelForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 10, 8, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
 
-        panelForm.add(new JLabel("Nombre:"));
-        txtNombre = new JTextField();
-        panelForm.add(txtNombre);
+        // Fila 1 - Cédula
+        gbc.gridx = 0; gbc.gridy = 0;
+        panelForm.add(new JLabel("Cédula:"), gbc);
 
-    // Añadir contraseña al formulario (antes se añadía al contenedor raíz por error)
-    panelForm.add(new JLabel("Contraseña:"));
-    txtContrasena = new JTextField();
-    panelForm.add(txtContrasena);
+        gbc.gridx = 1;
+        txtCedula = new JTextField(15);
+        panelForm.add(txtCedula, gbc);
 
-        panelForm.add(new JLabel("Especialidad:"));
-    comboEspecialidad = new JComboBox<>();
-    panelForm.add(comboEspecialidad);
+        // Fila 2 - Nombre
+        gbc.gridx = 0; gbc.gridy = 1;
+        panelForm.add(new JLabel("Nombre:"), gbc);
 
+        gbc.gridx = 1;
+        txtNombre = new JTextField(15);
+        panelForm.add(txtNombre, gbc);
+
+        // Fila 3 - Contraseña
+        gbc.gridx = 0; gbc.gridy = 2;
+        panelForm.add(new JLabel("Contraseña:"), gbc);
+
+        gbc.gridx = 1;
+        txtContrasena = new JTextField(15);
+        panelForm.add(txtContrasena, gbc);
+
+        // Fila 4 - Especialidad
+        gbc.gridx = 0; gbc.gridy = 3;
+        panelForm.add(new JLabel("Especialidad:"), gbc);
+
+        gbc.gridx = 1;
+        comboEspecialidad = new JComboBox<>();
+        panelForm.add(comboEspecialidad, gbc);
+
+        // Agregar formulario al centro
         add(panelForm, BorderLayout.CENTER);
 
-        JPanel panelBotones = new JPanel();
+        // ===== Panel de botones =====
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnRegistrar = new JButton("Registrar");
         JButton btnEditar = new JButton("Editar");
         JButton btnEliminar = new JButton("Eliminar");
         JButton btnVer = new JButton("Ver Médicos");
-    JButton btnVolver = new JButton("Volver");
+        JButton btnVolver = new JButton("Volver");
 
         panelBotones.add(btnRegistrar);
         panelBotones.add(btnEditar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnVer);
-    // Botón para volver al panel administrador
-    panelBotones.add(btnVolver);
+        panelBotones.add(btnVolver);
 
         add(panelBotones, BorderLayout.SOUTH);
 
+        // ===== Acciones =====
         btnRegistrar.addActionListener(this::registrarMedico);
         btnEditar.addActionListener(this::editarMedico);
         btnEliminar.addActionListener(this::eliminarMedico);
         btnVer.addActionListener(this::verMedicos);
-        btnVolver.addActionListener((ActionEvent e) -> {
-            // Volver al panel administrador
-            javax.swing.JFrame ventana = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-            ventana.setContentPane(new PanelAdministrador(gestor));
-            // Asegurar que el frame se actualice y mantenga tamaño razonable
-            ventana.revalidate();
-            ventana.repaint();
-            ventana.pack();
-            ventana.setLocationRelativeTo(null);
-        });
+        btnVolver.addActionListener(this::volverAlPanelAdministrador);
     }
 
     /**
-     * Este método permite al administrador completar los campos para crear un médico,
-     * Luego verifica que estén completos y crea un objeto tipo médico para que luego el gestor llame al método de
-     * la interfaz IMedicoService y cree el médico
-     * @param e, es la acción del usuario al presionar el botón para registrar médicos
+     * Acción del botón "Volver" al panel administrador.
+     */
+    private void volverAlPanelAdministrador(ActionEvent e) {
+        JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ventana.setContentPane(new PanelAdministrador(gestor));
+        ventana.revalidate();
+        ventana.repaint();
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+    }
+
+    /**
+     * Registrar un nuevo médico.
      */
     private void registrarMedico(ActionEvent e) {
         try {
@@ -111,23 +134,19 @@ public class GestionAdminEnMedicos extends JPanel {
             String contrasena = txtContrasena.getText().trim();
             Especialidad esp = (Especialidad) comboEspecialidad.getSelectedItem();
 
-            // Validaciones de campos vacíos o nulos
             if (cedula.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || esp == null) {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos antes de continuar");
                 return;
             }
 
-            // Validar formato de cédula 
             if (!cedula.matches("\\d+")) {
                 JOptionPane.showMessageDialog(this, "La cédula debe contener solo números");
                 return;
             }
 
-            // Crear objeto médico
             Medico nuevo = new Medico(cedula, nombre, esp, contrasena);
-
-            // Intentar registrar en el gestor
             boolean exito = gestor.registrarMedico(nuevo);
+
             if (exito) {
                 JOptionPane.showMessageDialog(this, "Médico registrado correctamente");
                 limpiarCampos();
@@ -135,32 +154,22 @@ public class GestionAdminEnMedicos extends JPanel {
                 JOptionPane.showMessageDialog(this, "Ya existe un médico con esa cédula");
             }
 
-    } catch (NullPointerException ex) {
-        JOptionPane.showMessageDialog(this, "Ocurrió un error: datos incompletos o nulos");
-        ex.printStackTrace();
-
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Formato inválido en campos numéricos");
-        ex.printStackTrace();
-
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error inesperado al registrar médico: " + ex.getMessage());
-        ex.printStackTrace();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al registrar médico: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
-}
+
     /**
-     * Este método se encarga de pedir nuevamente los datos del médico y enviarlo como objeto
-     * nuevamente en el gestor que a su vez llama al gestor de médicos para realizar la modificación
-     * @param e, es cuando el administrador presiona el botón para editar médico
+     * Editar un médico existente.
      */
     private void editarMedico(ActionEvent e) {
         try {
             String cedula = txtCedula.getText().trim();
             String nombre = txtNombre.getText().trim();
-            String contrasena = txtContrasena.getText().trim(); 
+            String contrasena = txtContrasena.getText().trim();
             Especialidad esp = (Especialidad) comboEspecialidad.getSelectedItem();
 
-            // Validaciones
             if (cedula.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Ingrese la cédula del médico a editar");
                 return;
@@ -171,51 +180,43 @@ public class GestionAdminEnMedicos extends JPanel {
                 return;
             }
 
-            // Crear objeto actualizado
             Medico actualizado = new Medico(cedula, nombre, esp, contrasena);
+            boolean exito = gestor.editarMedico(actualizado, nombre, esp);
 
-        
-        boolean exito = gestor.editarMedico(actualizado, nombre, esp);
-        if (exito) {
-            JOptionPane.showMessageDialog(this, "Médico actualizado correctamente");
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "Error: no se encontró un médico con esa cédula");
-        }
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Médico actualizado correctamente");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró un médico con esa cédula");
+            }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error al editar el médico: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al editar médico: " + ex.getMessage());
             ex.printStackTrace();
-        }   
+        }
     }
 
     /**
-     * Este método se encarga de pedir la cédula del médico que se va a eliminar al administrador
-     * para luego mandarsela al gestor de médicos y realice la eliminación 
-     * @param e, Es la acción de cuando el administrador presiona el botón de eliminar médico
+     * Eliminar un médico por cédula.
      */
     private void eliminarMedico(ActionEvent e) {
         String cedula = txtCedula.getText().trim();
 
-        //Validar campo vacío
         if (cedula.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese la cédula del médico a eliminar");
             return;
         }
 
-        //Validar que sean solo números
         if (!cedula.matches("\\d+")) {
             JOptionPane.showMessageDialog(this, "La cédula debe contener solo números");
             return;
         }
 
-        //Validar longitud 
         if (cedula.length() > 10) {
             JOptionPane.showMessageDialog(this, "La cédula debe tener entre 6 y 10 dígitos");
             return;
         }
 
-        // Confirmación antes de eliminar
         int confirm = JOptionPane.showConfirmDialog(this,
                 "¿Seguro que desea eliminar el médico con cédula " + cedula + "?",
                 "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
@@ -230,73 +231,47 @@ public class GestionAdminEnMedicos extends JPanel {
             }
         }
     }
+
     /**
-     * Muestra un listado de todos los médicos registrados en el sistema.
-     * Este método obtiene la lista de médicos desde el gestor, el cual llama al método que obtiene la lista
-     * de médicos del gestor de médicos
-     * @param e Es la acción del administrador cuando presiona el botón para ver médicos
+     * Mostrar lista de médicos.
      */
     private void verMedicos(ActionEvent e) {
-        // Obtener la lista de médicos desde el gestor
         List<Medico> medicos = gestor.listarMedicos();
-
-        // Validar si la lista está vacía
         if (medicos.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay médicos registrados");
             return;
         }
 
-        // Construir el texto que se mostrará con la lista de médicos
         StringBuilder sb = new StringBuilder("Listado de Médicos:\n\n");
-
-        // Recorrer cada médico y agregar su información al texto
         for (Medico m : medicos) {
-            sb.append("• ").append(m.getCedula()) 
-            .append(" - ").append(m.getNombre()); 
-
-            // Si el médico tiene una especialidad asociada, mostrarla entre paréntesis
+            sb.append("• ").append(m.getCedula()).append(" - ").append(m.getNombre());
             if (m.getEspecialidad() != null)
                 sb.append(" (").append(m.getEspecialidad().getNombre()).append(")");
-
-            sb.append("\n"); 
+            sb.append("\n");
         }
 
-        // Crear un área de texto para mostrar el listado
         JTextArea area = new JTextArea(sb.toString(), 15, 40);
-        area.setEditable(false); // No permitir edición
-
-        // Mostrar el área de texto dentro de un cuadro de diálogo desplazable
-        JOptionPane.showMessageDialog(
-            this,
-            new JScrollPane(area),
-            "Médicos",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        area.setEditable(false);
+        JOptionPane.showMessageDialog(this, new JScrollPane(area), "Médicos", JOptionPane.INFORMATION_MESSAGE);
     }
+
     /**
-     * Carga todas las especialidades disponibles en el combo box del formulario.
+     * Carga las especialidades en el combo box.
      */
     private void cargarEspecialidades() {
-        // Eliminar cualquier elemento existente en el combo box
         comboEspecialidad.removeAllItems();
-
-        // Recorrer la lista de especialidades obtenida desde el gestor
-        for (Especialidad espActual : gestor.listarEspecialidades()) {
-            // Agregar cada especialidad al combo box
-            comboEspecialidad.addItem(espActual);
+        for (Especialidad esp : gestor.listarEspecialidades()) {
+            comboEspecialidad.addItem(esp);
         }
     }
 
     /**
-     * Limpia todos los campos del formulario de gestión de médicos.
+     * Limpia los campos del formulario.
      */
     private void limpiarCampos() {
-
         txtCedula.setText("");
         txtNombre.setText("");
         txtContrasena.setText("");
-
-        // Deseleccionar cualquier especialidad en el combo box
         comboEspecialidad.setSelectedIndex(-1);
     }
 }
