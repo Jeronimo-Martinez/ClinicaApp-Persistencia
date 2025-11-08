@@ -20,7 +20,7 @@ public interface IMedicoService {
 
     boolean eliminarMedico(String cedula);
 
-    Medico buscarPorCedula(String cedula);
+    Medico buscarPorCedulaMedico(String cedula);
 
     List<Medico> listaMedicos();
      

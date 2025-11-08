@@ -108,7 +108,7 @@ public class GestorMedico implements IMedicoService {
 
     // Buscar médico por cédula
     @Override
-    public Medico buscarPorCedula(String cedula) {
+    public Medico buscarPorCedulaMedico(String cedula) {
         for (Medico m : listaMedicos) {
             if (m.getCedula().equals(cedula)) {
                 return m;
@@ -117,6 +117,6 @@ public class GestorMedico implements IMedicoService {
         return null;
     }
 
-    // Nota: la autenticación se realiza en GestorInicioSesion usando buscarPorCedula + comparación de contraseña
+    // Nota: la autenticación se realiza en GestorInicioSesion usando buscarPorCedulaMedico + comparación de contraseña
 }
 
