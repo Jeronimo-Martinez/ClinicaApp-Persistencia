@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
   
 
-//Esta persistencia es un plan b...
 
 
 public class RepositorioMedico implements IRepositorioMedico{
@@ -23,6 +22,7 @@ public class RepositorioMedico implements IRepositorioMedico{
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     // Guardar lista de médicos
+    @Override
     public void guardar(List<Medico> lista) {
         try (Writer writer = new FileWriter(ARCHIVO)) {
             gson.toJson(lista, writer);
@@ -32,7 +32,7 @@ public class RepositorioMedico implements IRepositorioMedico{
         }
     }
 
-    
+    @Override
     public List<Medico> cargar() {
         File archivo = new File(ARCHIVO);
 
@@ -49,7 +49,7 @@ public class RepositorioMedico implements IRepositorioMedico{
                 return new ArrayList<>();
             }
 
-            System.out.println(" Médicos cargados desde: " + ARCHIVO);
+            System.out.println(" Médicos cargados correctamente");
             return lista;
 
         } catch (IOException e) {
