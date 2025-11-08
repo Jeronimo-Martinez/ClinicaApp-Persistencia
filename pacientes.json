@@ -1,0 +1,16 @@
+[
+  {
+    "cedula": "1098453951",
+    "nombre": "Eliza",
+    "telefono": "3185249971",
+    "edad": 21,
+    "contrasena": "1111"
+  },
+  {
+    "cedula": "1096607451",
+    "nombre": "Carlos",
+    "telefono": "3182749841",
+    "edad": 30,
+    "contrasena": "2222"
+  }
+]

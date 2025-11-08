@@ -23,6 +23,7 @@ public class PanelPaciente extends JPanel {
     private JTextField txtTelefono;
     private JLabel tituloPanelPaciente;
     private JFrame ventanaPrincipal;
+    private boolean modoEdicion = false;
 
     /**
      * Este es el constructor del panel paciente
@@ -36,6 +37,7 @@ public class PanelPaciente extends JPanel {
         this.pacienteAutenticado = pacienteAutenticado;
         this.ventanaPrincipal = ventanaPrincipal;
         inicializarComponentes();
+        activarModoVisualizacion();
         configurarEstiloDelPanelPaciente();
         configurarEventosDelPanelPaciente();
     }
@@ -130,6 +132,22 @@ public class PanelPaciente extends JPanel {
         btnCerrarSesion.setForeground(new Color(255, 255, 255));
     }
 
+    private void activarModoVisualizacion() {
+        txtNombre.setEditable(false);
+        txtEdad.setEditable(false);
+        txtTelefono.setEditable(false);
+        btnEditarDatos.setText("Editar Datos");
+        modoEdicion = false;
+    }
+
+    private void activarModoEdicion() {
+        txtNombre.setEditable(true);
+        txtEdad.setEditable(true);
+        txtTelefono.setEditable(true);
+        btnEditarDatos.setText("Guardar Cambios");
+        modoEdicion = true;
+    }
+
     /**
      * Este método configura los eventos del panelPaciente
      */
@@ -163,6 +181,13 @@ public class PanelPaciente extends JPanel {
             @Override
             public void actionPerformed(ActionEvent clickEvento) {
 
+                // Se verifica si se esta en modo visualización, si es el caso, se cambia
+                if (!modoEdicion) {
+                    activarModoEdicion();
+                    return;
+                }
+
+                // Si ya se está en el modo edición, se validan y guardan los datos
                 try {
                     
                     // Se piden los datos
@@ -200,12 +225,6 @@ public class PanelPaciente extends JPanel {
                         return;
                     }
 
-                    // Se comprueba que la cédula sean números positivos
-                    if (!cedula.matches("^\\d+$")) {
-                        JOptionPane.showMessageDialog(PanelPaciente.this, "Cédula no válida", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-
                     // Se comprueba que el teléfono sean números positivos
                     if (!telefono.matches("^\\d{10}$")) {
                         JOptionPane.showMessageDialog(PanelPaciente.this, "Teléfono no válido", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -213,7 +232,6 @@ public class PanelPaciente extends JPanel {
                     }
 
                     pacienteAutenticado.setNombre(nombre);
-                    pacienteAutenticado.setCedula(cedula);
                     pacienteAutenticado.setEdad(edadValidacionNumero);
                     pacienteAutenticado.setTelefono(telefono);
 
@@ -221,9 +239,10 @@ public class PanelPaciente extends JPanel {
                     boolean estaPacienteEditado = gestorPaciente.editarPaciente(pacienteAutenticado);
                     if (estaPacienteEditado){
                         JOptionPane.showMessageDialog(PanelPaciente.this, "Datos actualizados con éxito", "Cambio Éxitoso", JOptionPane.INFORMATION_MESSAGE);
+                        activarModoVisualizacion();
                     }
                     else{
-                        JOptionPane.showMessageDialog(PanelPaciente.this, "No se encontró la cédula", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(PanelPaciente.this, "No se pudieron actualizar los datos", "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
 
@@ -241,11 +260,8 @@ public class PanelPaciente extends JPanel {
 
                 // En caso de que el paciente diga que sí
                 if (opcion == JOptionPane.YES_OPTION) {
-                    ventanaPrincipal = (JFrame) SwingUtilities.getWindowAncestor(PanelPaciente.this);
-                    ventanaPrincipal.getContentPane().removeAll();
-                    ventanaPrincipal.add(new VentanaIniciarSesion());
-                    ventanaPrincipal.revalidate();
-                    ventanaPrincipal.repaint();
+                    ventanaPrincipal.dispose();
+                    new VentanaIniciarSesion().setVisible(true);
                 }
             }
         });
