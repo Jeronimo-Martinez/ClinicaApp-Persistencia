@@ -64,7 +64,7 @@ public class GestorAdminEnEspecialidad extends JPanel {
         }
         
         if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-            JOptionPane.showMessageDialog(this, "La Especialidad ingresada es incorrecta(No debe contener numeros)");
+            JOptionPane.showMessageDialog(this, "La especialidad es incorrecta");
             return;
 }
         //Crea la nueva especialidad y llama al gestor 
@@ -91,6 +91,24 @@ public class GestorAdminEnEspecialidad extends JPanel {
             return;
         }
 
+        // Obtener la lista de especialidades registradas
+        List<Especialidad> especialidades = gestor.listarEspecialidades();
+
+        // Buscar si existe una especialidad con ese nombre
+        Especialidad especialidadEncontrada = null;
+        for (Especialidad esp : especialidades) {
+            if (esp.getNombre().equalsIgnoreCase(nombre)) {
+                especialidadEncontrada = esp;
+                break;
+            }
+        }
+
+        // Si no existe, mostrar mensaje y detener el proceso
+        if (especialidadEncontrada == null) {
+            JOptionPane.showMessageDialog(this, "La especialidad \"" + nombre + "\" no existe");
+            return;
+        }
+        
         Especialidad espProvicional = new Especialidad(nombre);
         int confirm = JOptionPane.showConfirmDialog(this,
                 "¿Seguro que desea eliminar la especialidad \"" + nombre + "\"?",
