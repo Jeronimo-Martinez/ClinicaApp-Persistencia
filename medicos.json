@@ -14,29 +14,5 @@
       "nombre": "Medicina General"
     },
     "contrasena": "2222"
-  },
-  {
-    "cedula": "134",
-    "nombre": "luis",
-    "especialidad": {
-      "nombre": "Pediatría"
-    },
-    "contrasena": "1234"
-  },
-  {
-    "cedula": "123456",
-    "nombre": "juan",
-    "especialidad": {
-      "nombre": "Cardiología"
-    },
-    "contrasena": "123"
-  },
-  {
-    "cedula": "1234",
-    "nombre": "sofia",
-    "especialidad": {
-      "nombre": "Cardiología"
-    },
-    "contrasena": "1234"
   }
 ]

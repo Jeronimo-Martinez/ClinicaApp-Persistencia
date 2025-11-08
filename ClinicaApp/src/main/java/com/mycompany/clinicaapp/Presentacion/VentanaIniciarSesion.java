@@ -170,3 +170,4 @@ public class VentanaIniciarSesion extends JFrame {
         btnSalir.addActionListener(e -> System.exit(0));
     }
 }
+
