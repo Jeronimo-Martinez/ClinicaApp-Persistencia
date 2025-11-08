@@ -17,14 +17,7 @@ public class GestorInicioSesion implements IInicioSesionService {
         this.gestorMedico = gestorMedico;
         this.gestorAdmin = gestorAdmin;
     }
-    @Override
-        public boolean registrarPaciente(String nombre, String cedula, String telefono, int edad, String contrasena) {
-        // Crear el nuevo paciente con los datos del formulario
-        Paciente nuevo = new Paciente(nombre, cedula, telefono, edad, contrasena);
-        
-        // Delegar el registro al gestor de pacientes
-        return gestorPaciente.registrarPaciente(nuevo);
-    }
+
 
     @Override
     public IUsuario iniciarSesion(String cedula, String contrasena) {
