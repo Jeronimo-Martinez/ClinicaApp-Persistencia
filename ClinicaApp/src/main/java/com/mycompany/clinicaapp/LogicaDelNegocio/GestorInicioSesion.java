@@ -22,19 +22,19 @@ public class GestorInicioSesion implements IInicioSesionService {
     @Override
     public IUsuario iniciarSesion(String cedula, String contrasena) {
         // Buscar paciente
-        Paciente p = gestorPaciente.buscarPorCedula(cedula);
+        Paciente p = gestorPaciente.buscarPorCedulaPaciente(cedula);
         if (p != null && p.getContrasena().equals(contrasena)) {
             return p;
         }
 
         // Buscar médico
-        Medico m = gestorMedico.buscarPorCedula(cedula);
+        Medico m = gestorMedico.buscarPorCedulaMedico(cedula);
         if (m != null && m.getContrasena().equals(contrasena)) {
             return m;
         }
 
         // Buscar administrador
-        Administrador a = gestorAdmin.buscarPorCedula(cedula);
+        Administrador a = gestorAdmin.buscarPorCedulaAdministrador(cedula);
         if (a != null && a.getContrasena().equals(contrasena)) {
             return a;
         }

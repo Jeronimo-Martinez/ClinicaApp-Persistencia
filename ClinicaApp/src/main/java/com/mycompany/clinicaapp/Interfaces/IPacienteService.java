@@ -13,5 +13,5 @@ public interface IPacienteService {
     boolean editarPaciente (Paciente paciente);
     boolean eliminarPaciente (Paciente paciente);
     List<Paciente> listarPacientes (); 
-    Paciente buscarPorCedula(String cedula);
+    Paciente buscarPorCedulaPaciente(String cedula);
 }

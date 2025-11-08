@@ -38,7 +38,7 @@ public class GestorAdministrador implements IGestorAdministrador {
 
    
     @Override
-    public Administrador buscarPorCedula(String cedula) {
+    public Administrador buscarPorCedulaAdministrador(String cedula) {
         for (Administrador a : listaAdministradores) {
             if (a.getCedula().equals(cedula)) {
                 return a;

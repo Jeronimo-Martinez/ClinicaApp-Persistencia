@@ -106,7 +106,7 @@ public class GestorPaciente implements IPacienteService{
      * @return p (el paciente. En caso de que no se encuentre, retorna null)
      */
     @Override
-    public Paciente buscarPorCedula(String cedula) {
+    public Paciente buscarPorCedulaPaciente(String cedula) {
         for (Paciente p : listaPacientes) {
             if (p.getCedula().equals(cedula)) {
                 return p;
