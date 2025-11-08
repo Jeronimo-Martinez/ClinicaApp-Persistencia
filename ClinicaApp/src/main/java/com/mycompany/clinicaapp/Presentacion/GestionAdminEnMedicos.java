@@ -46,7 +46,8 @@ public class GestionAdminEnMedicos extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createTitledBorder("Gestión de Médicos"));
 
-        JPanel panelForm = new JPanel(new GridLayout(3, 2, 5, 5));
+    // Usar 4 filas x 2 columnas: cada etiqueta junto a su campo en la misma fila
+    JPanel panelForm = new JPanel(new GridLayout(4, 2, 5, 5));
         panelForm.add(new JLabel("Cédula:"));
         txtCedula = new JTextField();
         panelForm.add(txtCedula);
