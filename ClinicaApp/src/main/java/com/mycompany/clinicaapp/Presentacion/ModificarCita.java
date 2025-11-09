@@ -34,6 +34,21 @@ public class ModificarCita extends javax.swing.JFrame {
      */
     public ModificarCita() {
         initComponents();
+        // Establecer colores personalizados para los botones (verde = aplicar, rojo = cancelar)
+        try {
+            botonAplicar.setBackground(new java.awt.Color(51, 204, 0));
+            botonAplicar.setForeground(new java.awt.Color(255, 255, 255));
+            botonAplicar.setOpaque(true);
+            botonAplicar.setBorderPainted(false);
+
+            botonCancelar.setBackground(new java.awt.Color(229, 57, 53));
+            botonCancelar.setForeground(new java.awt.Color(255, 255, 255));
+            botonCancelar.setOpaque(true);
+            botonCancelar.setBorderPainted(false);
+        } catch (Exception ex) {
+            // No bloquear la inicialización si hay algún LAF que impida los cambios
+            System.err.println("No se pudieron aplicar colores a los botones: " + ex.getMessage());
+        }
     }
     // nuevo constructor que recibe optional owner para refrescar la lista tras modificar
     public ModificarCita(IGestorCita gestorCita, IMedicoService gestorMedico, Cita cita, PanelCitasPaciente owner) {

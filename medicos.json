@@ -14,5 +14,21 @@
       "nombre": "Medicina General"
     },
     "contrasena": "2222"
+  },
+  {
+    "cedula": "3333",
+    "nombre": "Camilo Mendoza",
+    "especialidad": {
+      "nombre": "Medicina General"
+    },
+    "contrasena": "3333"
+  },
+  {
+    "cedula": "4444",
+    "nombre": "Laura Torres",
+    "especialidad": {
+      "nombre": "Pediatria"
+    },
+    "contrasena": "4444"
   }
 ]

@@ -38,5 +38,45 @@
       "edad": 30,
       "contrasena": "2222"
     }
+  },
+  {
+    "id": "85860868",
+    "fecha": "2025-06-06",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "1111",
+      "nombre": "Andrés Gómez",
+      "especialidad": {
+        "nombre": "Cardiología"
+      },
+      "contrasena": "1111"
+    },
+    "paciente": {
+      "cedula": "1098453951",
+      "nombre": "Eliza",
+      "telefono": "3185249971",
+      "edad": 21,
+      "contrasena": "1111"
+    }
+  },
+  {
+    "id": "0f5866ff",
+    "fecha": "2026-01-01",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "3333",
+      "nombre": "Camilo Mendoza",
+      "especialidad": {
+        "nombre": "Medicina General"
+      },
+      "contrasena": "3333"
+    },
+    "paciente": {
+      "cedula": "1098453951",
+      "nombre": "Eliza",
+      "telefono": "3185249971",
+      "edad": 21,
+      "contrasena": "1111"
+    }
   }
 ]

@@ -51,8 +51,8 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
         
         // Establecer tamaño y posición
         this.setBounds(x, y, width, height);
-        // Configurar fecha con formato placeholder
-        fechaStr.setText("YYYY-MM-DD");
+    // Configurar fecha con formato placeholder (dd/MM/yyyy)
+    fechaStr.setText("dd/MM/yyyy");
         
         // Configurar ComboBox Especialidad
         DefaultComboBoxModel<String> modeloEsp = new DefaultComboBoxModel<>();
@@ -212,6 +212,9 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tablaCitas);
 
+        botonVolver.setBackground(new java.awt.Color(66, 133, 244));
+        botonVolver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botonVolver.setForeground(new java.awt.Color(255, 255, 255));
         botonVolver.setText("Volver");
         botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -219,6 +222,9 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
             }
         });
 
+        botonCerrar.setBackground(new java.awt.Color(229, 57, 53));
+        botonCerrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botonCerrar.setForeground(new java.awt.Color(255, 255, 255));
         botonCerrar.setText("Cerrar");
         botonCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,6 +239,9 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
         reservartitle.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         reservartitle.setText("Reservar Cita :");
 
+        botonReserva.setBackground(new java.awt.Color(51, 204, 0));
+        botonReserva.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botonReserva.setForeground(new java.awt.Color(255, 255, 255));
         botonReserva.setText("Reservar");
         botonReserva.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,11 +288,11 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(reservartitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fechaStr, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fechaStr, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(boxEsp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -328,11 +337,8 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        VentanaIniciarSesion ventana = new VentanaIniciarSesion();
-        ventana.setVisible(true);
-        ventana.setLocationRelativeTo(null); 
         this.dispose();
-        // TODO : Modificar ventana anterior 
+        
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarActionPerformed
@@ -357,10 +363,28 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
 
     private void botonReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReservaActionPerformed
         try {
-            // Validar fecha
-            String fechaStr = this.fechaStr.getText();
-            LocalDate fecha = LocalDate.parse(fechaStr);
-            
+            // Validar fecha (formato dd/MM/yyyy, debe ser posterior a la fecha actual)
+            String fechaStr = this.fechaStr.getText().trim();
+            java.time.format.DateTimeFormatter formato = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate fecha = null;
+            try {
+                fecha = LocalDate.parse(fechaStr, formato);
+            } catch (java.time.format.DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(this,
+                    "Formato de fecha inválido. Usa el formato dd/MM/yyyy.\nEjemplo: 27/10/2025",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            LocalDate hoy = LocalDate.now();
+            if (!fecha.isAfter(hoy)) {
+                JOptionPane.showMessageDialog(this,
+                    "La fecha debe ser posterior a la actual.",
+                    "Fecha no válida",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             // Validar médico
             Medico medico = (Medico)boxMed.getSelectedItem();
             if(medico == null) {
