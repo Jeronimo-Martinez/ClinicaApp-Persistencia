@@ -3,7 +3,7 @@ package com.mycompany.clinicaapp.Modelos;
 import com.mycompany.clinicaapp.Interfaces.IUsuario;
 
 /**
- * Modelo que representa a un administrador del sistema.
+ * Modelo que representa al único administrador del sistema.
  */
 public class Administrador implements IUsuario {
 
