@@ -12,5 +12,12 @@
     "telefono": "3182749841",
     "edad": 30,
     "contrasena": "2222"
+  },
+  {
+    "cedula": "12345678",
+    "nombre": "Jose Juan Peranito Fulano",
+    "telefono": "0180003232",
+    "edad": 25,
+    "contrasena": "fulano1234"
   }
 ]

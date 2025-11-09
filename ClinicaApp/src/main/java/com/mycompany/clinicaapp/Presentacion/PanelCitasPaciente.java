@@ -13,7 +13,6 @@ import com.mycompany.clinicaapp.Modelos.Paciente;
 import com.mycompany.clinicaapp.Utilidades.BotonTablaCita;
 import java.awt.Component;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 import javax.swing.DefaultComboBoxModel;
@@ -126,14 +125,18 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
             return;
         }
 
+        // Filtrar solo citas sin diagnóstico (citas pendientes)
         for (Cita c : citasActualizadas) {
-            modelo.addRow(new Object[]{
-                c.getId(),
-                c.getFecha() != null ? c.getFecha().toString() : "",
-                c.getPaciente() != null ? c.getPaciente().getNombre() : "",
-                c.getMedico() != null ? c.getMedico().getNombre() : "",
-                "Acciones"
-            });
+            // Solo mostrar si el diagnóstico está vacío o es null
+            if (c.getDiagnostico() == null || c.getDiagnostico().trim().isEmpty()) {
+                modelo.addRow(new Object[]{
+                    c.getId(),
+                    c.getFecha() != null ? c.getFecha().toString() : "",
+                    c.getPaciente() != null ? c.getPaciente().getNombre() : "",
+                    c.getMedico() != null ? c.getMedico().getNombre() : "",
+                    "Acciones"
+                });
+            }
         }
 
         // reinstalar renderer/editor para la columna de acciones
@@ -161,14 +164,18 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
     }
     private void cargarCitas(List<Cita> citas) {
     modelotabla.setRowCount(0); // limpia tabla
+    // Filtrar solo citas sin diagnóstico (citas pendientes)
     for (Cita c : citas) {
-        modelotabla.addRow(new Object[]{
-            c.getId(),
-            c.getFecha(),
-            c.getPaciente().getNombre(),
-            c.getMedico().getNombre(),
-            "Acciones"
-        });
+        // Solo mostrar si el diagnóstico está vacío o es null
+        if (c.getDiagnostico() == null || c.getDiagnostico().trim().isEmpty()) {
+            modelotabla.addRow(new Object[]{
+                c.getId(),
+                c.getFecha(),
+                c.getPaciente().getNombre(),
+                c.getMedico().getNombre(),
+                "Acciones"
+            });
+        }
     }
 }
 
@@ -408,7 +415,7 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
                 refrescarTabla();
                 
                 // Limpiar campos
-                this.fechaStr.setText("YYYY-MM-DD");
+                this.fechaStr.setText("dd/MM/yyyy");
                 boxEsp.setSelectedIndex(0);
                 boxMed.setSelectedIndex(0);
             } else {
@@ -418,11 +425,6 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             }
             
-        } catch(DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Formato de fecha inválido. Use YYYY-MM-DD", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(this, 
                 "Error al procesar la solicitud: " + e.getMessage(), 
