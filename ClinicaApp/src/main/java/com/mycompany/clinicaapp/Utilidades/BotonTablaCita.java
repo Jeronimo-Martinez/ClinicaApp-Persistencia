@@ -36,6 +36,8 @@ public class BotonTablaCita extends AbstractCellEditor implements TableCellRende
     private JButton btnEliminar;
     private JTable tabla;
     private IGestorCita gestor;
+    // guarda la fila que está siendo editada actualmente
+    private int editingRow = -1;
 
     public BotonTablaCita(IGestorCita gestor, JTable tabla) {
         this.gestor = gestor;
@@ -59,41 +61,55 @@ public class BotonTablaCita extends AbstractCellEditor implements TableCellRende
 
         // Acción de los botones
         btnModificar.addActionListener(e -> {
-            int fila = tabla.getSelectedRow();
+            // usar la fila que guardamos en getTableCellEditorComponent
+            int fila = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
             if (fila >= 0) {
+                // primero finaliza la edición (para que JTable no intente setValueAt después de que modifiquemos el modelo)
+                fireEditingStopped();
+
                 String idCita = tabla.getValueAt(fila, 0).toString();
                 IMedicoService gestorMedico = new GestorMedico();
                 Cita cita = gestor.buscarCitaPorId(idCita);
-                // obtener la ventana PanelCitasPaciente que contiene la tabla (si existe)
                 PanelCitasPaciente ventanaLista = null;
                 java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(tabla);
                 if (win instanceof PanelCitasPaciente) {
                     ventanaLista = (PanelCitasPaciente) win;
                 }
                 ModificarCita ventanaModificar = new ModificarCita(gestor, gestorMedico, cita, ventanaLista);
-                 ventanaModificar.setVisible(true);
-                 Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-                 int x = (pantalla.width - ventanaModificar.getWidth()) / 2;
-                 int y = (pantalla.height - ventanaModificar.getHeight()) / 2;
-                 ventanaModificar.setLocation(x, y);
-                 
-             }
-             fireEditingStopped();
-         });
+                ventanaModificar.setVisible(true);
+                Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+                int x = (pantalla.width - ventanaModificar.getWidth()) / 2;
+                int y = (pantalla.height - ventanaModificar.getHeight()) / 2;
+                ventanaModificar.setLocation(x, y);
+            } else {
+                // nada seleccionado
+            }
+            // limpiar el índice de edición
+            editingRow = -1;
+        });
 
         btnEliminar.addActionListener(e -> {
-            int fila = tabla.getSelectedRow();
+            int fila = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
             if (fila >= 0) {
                 String id = tabla.getValueAt(fila, 0).toString();
                 int confirmar = JOptionPane.showConfirmDialog(tabla,
                         "¿Eliminar cita ID " + id + "?", "Confirmar eliminación",
                         JOptionPane.YES_NO_OPTION);
                 if (confirmar == JOptionPane.YES_OPTION) {
+                    // primero notificar fin de edición para que JTable no intente escribir en una fila ya eliminada
+                    fireEditingStopped();
+
+                    // luego realizar eliminación en repositorio y modelo
                     gestor.eliminarCita(id);
-                    ((DefaultTableModel) tabla.getModel()).removeRow(fila);
+                    try {
+                        ((DefaultTableModel) tabla.getModel()).removeRow(fila);
+                    } catch (IndexOutOfBoundsException ex) {
+                        
+                        System.err.println("Error al eliminar fila del modelo: " + ex.getMessage());
+                    }
                 }
             }
-            fireEditingStopped();
+            editingRow = -1;
         });
     }
 
@@ -105,10 +121,11 @@ public class BotonTablaCita extends AbstractCellEditor implements TableCellRende
         return panel;
     }
 
-    // Devuelve el panel cuando se hace clic
+    // Devuelve el panel cuando se hace clic; aquí guardamos la fila que se está editando
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value,
                                                  boolean isSelected, int row, int column) {
+        this.editingRow = row;
         return panel;
     }
 

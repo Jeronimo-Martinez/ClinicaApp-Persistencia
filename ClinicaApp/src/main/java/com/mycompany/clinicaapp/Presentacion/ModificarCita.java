@@ -118,7 +118,7 @@ public class ModificarCita extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<Medico>());
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actionPerformed(evt);
+                jComboBox1ActionPerformed(evt);
             }
         });
 
@@ -262,6 +262,10 @@ public class ModificarCita extends javax.swing.JFrame {
     private void textoFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textoFechaActionPerformed
            //nothig to do here        
     }//GEN-LAST:event_textoFechaActionPerformed
+
+    
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
+    }
 
     /**
      * @param args the command line arguments
