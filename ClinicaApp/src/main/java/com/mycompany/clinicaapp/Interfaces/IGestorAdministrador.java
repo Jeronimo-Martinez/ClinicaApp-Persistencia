@@ -8,7 +8,10 @@ import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
 
 
-
+/**
+ * Esta es la interfaz de los métodos que debe implementar el gestor del administrador
+ * @author Silvana
+ */
 public interface IGestorAdministrador {
     boolean registrarMedico(Medico medico);
     boolean editarMedico(Medico medico, String nombre, Especialidad esp);

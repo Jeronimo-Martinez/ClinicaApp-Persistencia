@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Esta clase se encarga de implementar las operaciones
- * que el administrador puede realizar sobre médicos, pacientes
+ * que el único administrador del sistema puede realizar sobre médicos, pacientes
  * y especialidades.
  */
 public class GestorAdministrador implements IGestorAdministrador {
@@ -23,8 +23,11 @@ public class GestorAdministrador implements IGestorAdministrador {
     private final List<Administrador> listaAdministradores;
 
     /**
-     * Constructor que recibe las dependencias desde fuera.
-     * Esto permite inyectar las implementaciones concretas.
+     * Constructor que inicializa el gestor con las dependencias requeridas.
+     * 
+     * @param medicoService       servicio encargado de la gestión de médicos
+     * @param pacienteService     servicio encargado de la gestión de pacientes
+     * @param especialidadService servicio encargado de la gestión de especialidades
      */
     public GestorAdministrador(IMedicoService medicoService, IPacienteService pacienteService, IEspecialidadService especialidadService) {
         this.medicoService = medicoService;
@@ -36,7 +39,11 @@ public class GestorAdministrador implements IGestorAdministrador {
         listaAdministradores.add(new Administrador("1234567890", "admin1234"));
     }
 
-   
+   /**
+     * Busca un administrador registrado por su número de cédula.
+     * 
+     * @param cedula la cédula del administrador a buscar
+     */
     @Override
     public Administrador buscarPorCedulaAdministrador(String cedula) {
         for (Administrador a : listaAdministradores) {
@@ -48,7 +55,9 @@ public class GestorAdministrador implements IGestorAdministrador {
     }
    
 
-    
+    /*
+     * Estos son los métodos que debe llamar del gestor de médicos
+     */
     @Override
     public boolean registrarMedico(Medico medico) {
         return medicoService.agregarMedic(medico);
@@ -65,7 +74,9 @@ public class GestorAdministrador implements IGestorAdministrador {
     }
 
 
-
+    /**
+     * Estos son los métodos que debe llamar del gestor de pacientes
+     */
 
     @Override
     public boolean registrarPaciente(Paciente paciente) {
@@ -83,7 +94,9 @@ public class GestorAdministrador implements IGestorAdministrador {
     }
 
 
-
+    /**
+     * Estos son los métodos que se deben llamar del gestor de especialidades
+     */
 
     @Override
     public void registrarEspecialidad(Especialidad especialidad) {
@@ -101,29 +114,33 @@ public class GestorAdministrador implements IGestorAdministrador {
     }
 
 
+    /**
+     * Métods que llaman a distintos gestores para mostrar las entidades
+     */
+    @Override
+    public List<Paciente> listarPacientes() {
+        return pacienteService.listarPacientes();
+    }
 
-@Override
-public List<Paciente> listarPacientes() {
-    return pacienteService.listarPacientes();
-}
+    @Override
+    public List<Especialidad> listarEspecialidades() {
+        return especialidadService.listarEspecialidades();
+    }
 
-@Override
-public List<Especialidad> listarEspecialidades() {
-    return especialidadService.listarEspecialidades();
-}
-
-
-public IMedicoService getMedicoService() {
-    return this.medicoService;
-}
+    /**
+     * Métodos de encapsulamiento
+     */
+    public IMedicoService getMedicoService() {
+        return this.medicoService;
+    }
 
 
-public IPacienteService getPacienteService() {
-    return this.pacienteService;
-}
+    public IPacienteService getPacienteService() {
+        return this.pacienteService;
+    }
 
 
-public IEspecialidadService getEspecialidadService() {
-    return this.especialidadService;
-}
-}
+    public IEspecialidadService getEspecialidadService() {
+        return this.especialidadService;
+    }
+    }

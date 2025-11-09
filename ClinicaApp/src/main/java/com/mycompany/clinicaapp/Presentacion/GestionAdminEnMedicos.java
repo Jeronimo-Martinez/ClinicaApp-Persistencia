@@ -1,16 +1,7 @@
 package com.mycompany.clinicaapp.Presentacion;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+
 import com.mycompany.clinicaapp.Interfaces.IGestorAdministrador;
 import com.mycompany.clinicaapp.Modelos.Especialidad;
 import com.mycompany.clinicaapp.Modelos.Medico;
@@ -46,7 +37,7 @@ public class GestionAdminEnMedicos extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createTitledBorder("Gestión de Médicos"));
 
-        // ===== Panel del formulario =====
+    
         JPanel panelForm = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 10, 8, 10);
@@ -88,7 +79,7 @@ public class GestionAdminEnMedicos extends JPanel {
         // Agregar formulario al centro
         add(panelForm, BorderLayout.CENTER);
 
-        // ===== Panel de botones =====
+        // Panel de botones 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton btnRegistrar = new JButton("Registrar");
         JButton btnEditar = new JButton("Editar");
@@ -104,7 +95,7 @@ public class GestionAdminEnMedicos extends JPanel {
 
         add(panelBotones, BorderLayout.SOUTH);
 
-        // ===== Acciones =====
+        // Acciones 
         btnRegistrar.addActionListener(this::registrarMedico);
         btnEditar.addActionListener(this::editarMedico);
         btnEliminar.addActionListener(this::eliminarMedico);
@@ -125,7 +116,9 @@ public class GestionAdminEnMedicos extends JPanel {
     }
 
     /**
-     * Registrar un nuevo médico.
+     * Registra un nuevo médico en el sistema tras validar correctamente los datos ingresados.
+     *
+     * @param e el evento de acción generado por el botón u otro componente
      */
     private void registrarMedico(ActionEvent e) {
         try {
@@ -134,31 +127,67 @@ public class GestionAdminEnMedicos extends JPanel {
             String contrasena = txtContrasena.getText().trim();
             Especialidad esp = (Especialidad) comboEspecialidad.getSelectedItem();
 
+            //  Validar campos vacíos
             if (cedula.isEmpty() || nombre.isEmpty() || contrasena.isEmpty() || esp == null) {
-                JOptionPane.showMessageDialog(this, "Complete todos los campos antes de continuar");
+                JOptionPane.showMessageDialog(this, "Complete todos los campos antes de continuar", 
+                                            "Campos incompletos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
+            //  Validar formato de cédula (solo números)
             if (!cedula.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "La cédula debe contener solo números");
+                JOptionPane.showMessageDialog(this, "La cédula debe contener solo números", 
+                                            "Formato inválido", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            //  Validar longitud de cédula (ejemplo: entre 6 y 10 dígitos)
+            if (cedula.length() < 6 || cedula.length() > 10) {
+                JOptionPane.showMessageDialog(this, "La cédula debe tener entre 6 y 10 dígitos", 
+                                            "Longitud inválida", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            //  Validar nombre (solo letras y espacios)
+            if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+                JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios", 
+                                            "Formato inválido", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar contraseña segura
+            if (contrasena.length() < 8) {
+                JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 8 caracteres", 
+                                            "Contraseña insegura", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!contrasena.matches("^(?=.*[A-Za-z])(?=.*\\d).+$")) {
+                JOptionPane.showMessageDialog(this, "La contraseña debe contener letras y números", 
+                                            "Contraseña insegura", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            //Crear y registrar médico
             Medico nuevo = new Medico(cedula, nombre, esp, contrasena);
             boolean exito = gestor.registrarMedico(nuevo);
 
             if (exito) {
-                JOptionPane.showMessageDialog(this, "Médico registrado correctamente");
+                JOptionPane.showMessageDialog(this, "Médico registrado correctamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 limpiarCampos();
             } else {
-                JOptionPane.showMessageDialog(this, "Ya existe un médico con esa cédula");
+                JOptionPane.showMessageDialog(this, "No se pudo registrar el médico.", 
+                                            "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al registrar médico: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al registrar médico: " + ex.getMessage(), 
+                                        "Excepción", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }
+
 
     /**
      * Editar un médico existente.
@@ -170,12 +199,7 @@ public class GestionAdminEnMedicos extends JPanel {
             String contrasena = txtContrasena.getText().trim();
             Especialidad esp = (Especialidad) comboEspecialidad.getSelectedItem();
 
-            if (cedula.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Ingrese la cédula del médico a editar");
-                return;
-            }
-
-            if (nombre.isEmpty() || contrasena.isEmpty() || esp == null) {
+            if (nombre.isEmpty() || contrasena.isEmpty() || esp == null || cedula.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos antes de editar");
                 return;
             }
