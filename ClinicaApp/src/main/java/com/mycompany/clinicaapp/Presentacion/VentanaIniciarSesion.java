@@ -15,6 +15,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa la ventana principal de inicio de sesión de la aplicación ClínicaApp.
+ * Esta ventana permite al usuario ingresar su cédula y contraseña para autenticarse en el sistema.
+ * Según el tipo de usuario (Paciente, Médico o Administrador), se redirige al panel correspondiente.
+ * También ofrece opciones para registrarse o salir del sistema.
+ */
 public class VentanaIniciarSesion extends JFrame {
 
     private JTextField txtCedula;
@@ -31,6 +37,11 @@ public class VentanaIniciarSesion extends JFrame {
     private final IInicioSesionService gestorInicioSesion;
     private final GestorCita gestorCita;
 
+    /**
+     * Constructor.
+     * Inicializa los gestores y servicios necesarios para manejar la lógica de inicio de sesión.
+     * Configura la interfaz gráfica y los eventos asociados a los botones.
+     */
     public VentanaIniciarSesion() {
         // Inicialización de gestores
         gestorPaciente = new GestorPaciente();
@@ -92,6 +103,9 @@ public class VentanaIniciarSesion extends JFrame {
         btnRegistrarse = new JButton("Registrarse");
         add(btnRegistrarse, gbc);
     }
+    /**
+     * Configura las propiedades principales de la ventana (título, tamaño, cierre, posición).
+     */
 
     private void configurarVentana() {
         setTitle("ClínicaApp - Inicio de Sesión");
@@ -99,7 +113,9 @@ public class VentanaIniciarSesion extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
+     /**
+     * Define los eventos de los botones
+     */
     private void configurarEventos() {
         btnIniciarSesion.addActionListener(new ActionListener() {
             @Override

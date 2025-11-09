@@ -209,7 +209,13 @@ public class GestionAdminEnPacientes extends JPanel {
 
     private void eliminarPaciente(ActionEvent e) {
         String cedula = txtCedula.getText().trim();
-
+        JOptionPane.showMessageDialog(
+            this,
+            "Solo debe ingresar la cédula del paciente que desea eliminar.\n" +
+            "Los demás campos no son necesarios.",
+            "Aviso",
+            JOptionPane.INFORMATION_MESSAGE
+            );
         if (cedula.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe ingresar la cédula del paciente a eliminar");
             return;
