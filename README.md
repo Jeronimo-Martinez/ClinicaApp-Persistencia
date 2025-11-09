@@ -6,4 +6,4 @@ Integrantes:
 - Jhoan Sebastian Daza
  	
 Diagrama De Clases
-![alt text](DiagramaDeClases2.drawio.png)
+![alt text](DiagramaDeClases3.drawio.png)
