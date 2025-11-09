@@ -12,6 +12,7 @@ import java.util.List;
  * Panel para la gestión de pacientes:
  * registrar, editar y eliminar.
  */
+
 public class GestionAdminEnPacientes extends JPanel {
 
     private final IGestorAdministrador gestor;
@@ -34,7 +35,9 @@ public class GestionAdminEnPacientes extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Gestión de Pacientes"));
 
         // Formulario superior
-        JPanel panelForm = new JPanel(new GridLayout(4, 2, 5, 5));
+        JPanel panelForm = new JPanel(new GridLayout(5, 2, 5, 5));
+        panelForm.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         panelForm.add(new JLabel("Cédula:"));
         txtCedula = new JTextField();
         panelForm.add(txtCedula);
@@ -51,7 +54,7 @@ public class GestionAdminEnPacientes extends JPanel {
         txtTelefono = new JTextField();
         panelForm.add(txtTelefono);
 
-        panelForm.add(new JLabel("Contraseña"));
+        panelForm.add(new JLabel("Contraseña:"));
         txtContrasena = new JTextField();
         panelForm.add(txtContrasena);
 
@@ -63,17 +66,35 @@ public class GestionAdminEnPacientes extends JPanel {
         tablaPacientes = new JTable(modeloTabla);
         add(new JScrollPane(tablaPacientes), BorderLayout.CENTER);
 
-        // Botones inferiores
-        JPanel panelBotones = new JPanel();
+        // --- Panel inferior con botones bien alineados ---
+        JPanel panelBotones = new JPanel(new GridBagLayout());
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 10, 5, 10); // margen entre botones
+
         JButton btnRegistrar = new JButton("Registrar");
         JButton btnEditar = new JButton("Editar");
         JButton btnEliminar = new JButton("Eliminar");
         JButton btnVer = new JButton("Ver Pacientes");
 
-        panelBotones.add(btnRegistrar);
-        panelBotones.add(btnEditar);
-        panelBotones.add(btnEliminar);
-        panelBotones.add(btnVer);
+        // Configurar tamaño uniforme
+        Dimension tamBoton = new Dimension(140, 30);
+        btnRegistrar.setPreferredSize(tamBoton);
+        btnEditar.setPreferredSize(tamBoton);
+        btnEliminar.setPreferredSize(tamBoton);
+        btnVer.setPreferredSize(tamBoton);
+
+        // Añadir botones centrados horizontalmente
+        gbc.gridx = 0;
+        panelBotones.add(btnRegistrar, gbc);
+        gbc.gridx = 1;
+        panelBotones.add(btnEditar, gbc);
+        gbc.gridx = 2;
+        panelBotones.add(btnEliminar, gbc);
+        gbc.gridx = 3;
+        panelBotones.add(btnVer, gbc);
+
         add(panelBotones, BorderLayout.SOUTH);
 
         // Eventos
@@ -83,65 +104,59 @@ public class GestionAdminEnPacientes extends JPanel {
         btnVer.addActionListener(this::verPacientes);
     }
 
-    /**
-     * Este método se encarga de leer lo que ingrese el administrador en los campos de texto 
-     * y crear a un paciente con estos datos para luego enviarlo al gestor, que luego llamará al método para
-     * registrar pacientes del gestor de médicos
-     * @param e
-     */
     private void registrarPaciente(ActionEvent e) {
-    // Obtener y limpiar valores de los campos de texto
-    String cedula = txtCedula.getText().trim();
-    String nombre = txtNombre.getText().trim();
-    String edadTexto = txtEdad.getText().trim();
-    String telefono = txtTelefono.getText().trim();
-    String contrasena = txtContrasena.getText().trim();
+        String cedula = txtCedula.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String edadTexto = txtEdad.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String contrasena = txtContrasena.getText().trim();
 
-    // Validar que los campos obligatorios no estén vacíos
-    if (cedula.isEmpty() || nombre.isEmpty() || edadTexto.isEmpty() || telefono.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
-        return;
-    }
-
-    int edad;
-    // Validar que la edad sea un número entero positivo
-    try {
-        edad = Integer.parseInt(edadTexto);
-        if (edad <= 0) {
-            JOptionPane.showMessageDialog(this, "La edad debe ser un número positivo");
+        if (cedula.isEmpty() || nombre.isEmpty() || edadTexto.isEmpty() || telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
             return;
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "La edad debe ser un número válido");
-        return;
+
+        int edad;
+        try {
+            edad = Integer.parseInt(edadTexto);
+            if (edad <= 0) {
+                JOptionPane.showMessageDialog(this, "La edad debe ser un número positivo");
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "La edad debe ser un número válido");
+            return;
+        }
+        if (contrasena.length() < 8 || 
+            !contrasena.matches(".*[A-Za-z].*") || 
+            !contrasena.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(this, 
+                "La contraseña debe tener al menos 8 caracteres, incluir una letra y un número");
+            return;
+        }
+
+
+        if (!telefono.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this, "El teléfono debe contener solo números (10 dígitos)");
+            return;
+        }
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+            JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios");
+            return;
+        }
+
+        Paciente nuevo = new Paciente(cedula, nombre, telefono, edad, contrasena);
+        boolean exito = gestor.registrarPaciente(nuevo);
+
+        if (exito) {
+            JOptionPane.showMessageDialog(this, "Paciente registrado correctamente");
+            limpiarCampos();
+            cargarPacientes();
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: ya existe un paciente con esa cédula o no se pudo registrar");
+        }
     }
 
-    // Validar que el teléfono contenga solo dígitos 
-    if (!telefono.matches("\\d{10}")) { 
-        JOptionPane.showMessageDialog(this, "El teléfono debe contener solo números (10 dígitos)");
-        return;
-    }
-
-    // Crear el nuevo paciente
-    Paciente nuevo = new Paciente(cedula, nombre, telefono, edad, contrasena);
-    boolean exito = gestor.registrarPaciente(nuevo);
-
-    // Mensaje según el resultado
-    if (exito) {
-        JOptionPane.showMessageDialog(this, "Paciente registrado correctamente");
-        limpiarCampos();
-        cargarPacientes();
-    } else {
-        JOptionPane.showMessageDialog(this, "Error: ya existe un paciente con esa cédula o no se pudo registrar");
-    }
-}
-
-    /**
-     * Este método se encarga de leer los datos que el paciente ingresa, 
-     * para crear uno nuevo pero con los datos ya actualizados, el cual se envía al gestor de pacientes por medio
-     * del gestor del administrador 
-     * @param e: Es la acción de cuando el administrador presiona el botón de editar paciente
-     */
     private void editarPaciente(ActionEvent e) {
         try {
             String cedula = txtCedula.getText().trim();
@@ -150,13 +165,11 @@ public class GestionAdminEnPacientes extends JPanel {
             String edadTexto = txtEdad.getText().trim();
             String contrasena = txtContrasena.getText().trim();
 
-            // Validar campos vacíos
             if (cedula.isEmpty() || nombre.isEmpty() || telefono.isEmpty() || edadTexto.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
                 return;
             }
 
-            // Validar edad numérica y rango
             int edad;
             try {
                 edad = Integer.parseInt(edadTexto);
@@ -169,13 +182,11 @@ public class GestionAdminEnPacientes extends JPanel {
                 return;
             }
 
-            // Validar teléfono
             if (!telefono.matches("\\d{10}")) {
                 JOptionPane.showMessageDialog(this, "El teléfono debe tener exactamente 10 dígitos numéricos");
                 return;
             }
 
-            // Crear objeto actualizado
             Paciente actualizado = new Paciente(cedula, nombre, telefono, edad, contrasena);
             boolean exito = gestor.editarPaciente(actualizado);
 
@@ -192,12 +203,6 @@ public class GestionAdminEnPacientes extends JPanel {
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Este método se encarga de pedir la cédula del paciente a eliminar, para luego crear uno y mandarlo a el gestor
-     * de pacientes con ayuda del gestor del administrador y hacer la eliminación
-     * @param e: Acción del administrador al presionar el botón de eliminar un paciente
-     */
 
     private void eliminarPaciente(ActionEvent e) {
         String cedula = txtCedula.getText().trim();
@@ -227,61 +232,45 @@ public class GestionAdminEnPacientes extends JPanel {
             }
         }
     }
-    /**
-     * Carga en la tabla todos los pacientes registrados en el sistema.
-     * Este método obtiene la lista actual de pacientes desde el gestor
-     * y la muestra en la interfaz gráfica, dentro de la tabla asociada
-     * al modelo `modeloTabla`.
-     */
+
     private void cargarPacientes() {
-        modeloTabla.setRowCount(0); // limpia la tabla
+        modeloTabla.setRowCount(0);
         List<Paciente> pacientes = gestor.listarPacientes();
         for (Paciente p : pacientes) {
             modeloTabla.addRow(new Object[]{
-                p.getCedula(),
-                p.getNombre(),
-                p.getEdad(),
-                p.getTelefono()
+                    p.getCedula(),
+                    p.getNombre(),
+                    p.getEdad(),
+                    p.getTelefono()
             });
         }
     }
-    /**
-     * Muestra una lista con todos los pacientes registrados en el sistema.
-     * Este método obtiene la lista actual de pacientes desde el gestor 
-     * y los presenta en un cuadro de diálogo en formato legible. 
-     * Si no existen pacientes registrados, muestra un mensaje de advertencia.
-     * @param e el evento que dispara la acción (clic en el botón "Ver pacientes")
-     */
+
     private void verPacientes(ActionEvent e) {
-    List<Paciente> pacientes = gestor.listarPacientes();
-    if (pacientes.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "No hay pacientes registrados");
-        return;
+        List<Paciente> pacientes = gestor.listarPacientes();
+        if (pacientes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay pacientes registrados");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("Listado de Pacientes:\n\n");
+        for (Paciente p : pacientes) {
+            sb.append("• ").append(p.getCedula())
+              .append(" - ").append(p.getNombre())
+              .append(" (").append(p.getEdad()).append(", ")
+              .append(p.getTelefono()).append(")\n");
+        }
+
+        JTextArea area = new JTextArea(sb.toString(), 15, 40);
+        area.setEditable(false);
+        JOptionPane.showMessageDialog(this, new JScrollPane(area), "Pacientes", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    StringBuilder sb = new StringBuilder("Listado de Pacientes:\n\n");
-    for (Paciente p : pacientes) {
-        sb.append("• ").append(p.getCedula())
-          .append(" - ").append(p.getNombre())
-          .append(" (").append(p.getEdad()).append(", ")
-          .append(p.getTelefono()).append(")\n");
-    }
-
-    JTextArea area = new JTextArea(sb.toString(), 15, 40);
-    area.setEditable(false);
-    JOptionPane.showMessageDialog(this, new JScrollPane(area), "Pacientes", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Limpia todos los campos del formulario de pacientes.
-     *
-     * Este método restablece los valores de los campos de texto 
-     * a vacío, preparando el formulario para una nueva entrada.
-     */
     private void limpiarCampos() {
         txtCedula.setText("");
         txtNombre.setText("");
         txtEdad.setText("");
         txtTelefono.setText("");
+        txtContrasena.setText("");
     }
 }
