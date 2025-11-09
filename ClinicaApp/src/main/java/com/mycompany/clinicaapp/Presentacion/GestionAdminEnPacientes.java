@@ -20,7 +20,10 @@ public class GestionAdminEnPacientes extends JPanel {
     private JTextField txtCedula, txtNombre, txtEdad, txtTelefono, txtContrasena;
     private JTable tablaPacientes;
     private DefaultTableModel modeloTabla;
-
+    /**
+     * Constructor
+     * @param gestor
+     */
     public GestionAdminEnPacientes(IGestorAdministrador gestor) {
         this.gestor = gestor;
         initComponents();
