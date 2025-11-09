@@ -104,7 +104,7 @@ public class PanelCitasMedico extends JPanel {
         );
 
         // Acciones de botones
-        btnSubir.addActionListener(e -> subirDiagnostico());
+        btnSubir.addActionListener(e -> subirDiagnostico(citas));
         btnHistorial.addActionListener(e -> abrirHistorial());
 
         // 🔹 Acción del botón Cerrar sesión
@@ -121,23 +121,31 @@ public class PanelCitasMedico extends JPanel {
     private void cargarCitas(List<Cita> citas) {
         modelotabla.setRowCount(0);
         for (Cita c : citas) {
-            modelotabla.addRow(new Object[]{
-                c.getId(),
-                c.getFecha(),
-                c.getPaciente().getNombre(),
-                c.getMedico().getNombre()
-            });
+            // Solo mostrar citas sin diagnóstico (pendientes)
+            if (c.getDiagnostico() == null || c.getDiagnostico().trim().isEmpty()) {
+                modelotabla.addRow(new Object[]{
+                    c.getId(),
+                    c.getFecha(),
+                    c.getPaciente().getNombre(),
+                    c.getMedico().getNombre()
+                });
+            }
         }
     }
 
-    private void subirDiagnostico() {
+    private void subirDiagnostico(List<Cita> citas) {
         try {
             String id = idCita.getText().trim();
             String diag = diagnostico.getText().trim();
             Cita cita = gestor.buscarCitaPorId(id);
-            if (cita != null) {
-                cita.setDiagnostico(diag);
+            cita.setDiagnostico(diag);
+            if (gestor.modificarCita(id, cita)) {
                 JOptionPane.showMessageDialog(this, "Diagnóstico registrado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                // Refrescar la tabla para que la cita desaparezca de pendientes
+                refrescarTabla(citas);
+                // Limpiar campos
+                idCita.setText("");
+                diagnostico.setText("");
             } else {
                 JOptionPane.showMessageDialog(this, "Cita no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -160,17 +168,20 @@ public class PanelCitasMedico extends JPanel {
         panelDinamico.repaint();
     }
 
-    public void refrescarTabla() {
+    public void refrescarTabla(List<Cita> citas) {
         DefaultTableModel modelo = (DefaultTableModel) tablaCitas.getModel();
         modelo.setRowCount(0);
-        List<Cita> citasActualizadas = gestor.getCitas();
+        List<Cita> citasActualizadas = citas;
         for (Cita c : citasActualizadas) {
-            modelo.addRow(new Object[]{
-                c.getId(),
-                c.getFecha(),
-                c.getPaciente().getNombre(),
-                c.getMedico().getNombre()
-            });
+            // Solo mostrar citas sin diagnóstico (pendientes)
+            if (c.getDiagnostico() == null || c.getDiagnostico().trim().isEmpty()) {
+                modelo.addRow(new Object[]{
+                    c.getId(),
+                    c.getFecha(),
+                    c.getPaciente().getNombre(),
+                    c.getMedico().getNombre()
+                });
+            }
         }
     }
 }
