@@ -77,8 +77,8 @@ public class PanelAdministrador extends JPanel {
         panelContenedor.add(nuevoPanel, BorderLayout.CENTER);
 
         JButton btnVolver = new JButton("Volver al Panel Administrador");
-        // Use the captured ventana reference so the action still works even after
-        // this panel has been replaced in the frame's content pane.
+        
+
         btnVolver.addActionListener(a -> {
             if (ventana != null) {
                 ventana.setContentPane(new PanelAdministrador(gestor));
@@ -88,7 +88,7 @@ public class PanelAdministrador extends JPanel {
                 ventana.setLocationRelativeTo(null);
                 ventana.setVisible(true);
             } else {
-                // Fallback: no ancestor frame found, open a new window with the admin panel
+                
                 JFrame nueva = new JFrame("Panel Administrador");
                 nueva.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 nueva.setContentPane(new PanelAdministrador(gestor));
@@ -106,7 +106,7 @@ public class PanelAdministrador extends JPanel {
             ventana.pack();
             ventana.setLocationRelativeTo(null);
         } else {
-            // If no ancestor frame is available, open a new window to display the panel
+        
             JFrame nueva = new JFrame("Administrador");
             nueva.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             nueva.setContentPane(panelContenedor);
