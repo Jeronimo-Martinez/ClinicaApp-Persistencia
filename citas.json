@@ -1,45 +1,5 @@
 [
   {
-    "id": "33df7c51",
-    "fecha": "1600-12-12",
-    "diagnostico": "",
-    "medico": {
-      "cedula": "1111",
-      "nombre": "Andrés Gómez",
-      "especialidad": {
-        "nombre": "Cardiología"
-      },
-      "contrasena": "1111"
-    },
-    "paciente": {
-      "cedula": "1098453951",
-      "nombre": "Eliza",
-      "telefono": "3185249971",
-      "edad": 21,
-      "contrasena": "1111"
-    }
-  },
-  {
-    "id": "1666ac6a",
-    "fecha": "2026-01-01",
-    "diagnostico": "",
-    "medico": {
-      "cedula": "2222",
-      "nombre": "Laura Torres",
-      "especialidad": {
-        "nombre": "Medicina General"
-      },
-      "contrasena": "2222"
-    },
-    "paciente": {
-      "cedula": "1098453951",
-      "nombre": "Eliza",
-      "telefono": "3185249971",
-      "edad": 21,
-      "contrasena": "1111"
-    }
-  },
-  {
     "id": "10e0b97a",
     "fecha": "2026-02-24",
     "diagnostico": "",

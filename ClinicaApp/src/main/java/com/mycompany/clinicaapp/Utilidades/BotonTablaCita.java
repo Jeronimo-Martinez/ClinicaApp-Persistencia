@@ -61,51 +61,65 @@ public class BotonTablaCita extends AbstractCellEditor implements TableCellRende
 
         // Acción de los botones
         btnModificar.addActionListener(e -> {
-            // usar la fila que guardamos en getTableCellEditorComponent
-            int fila = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
-            if (fila >= 0) {
-                // primero finaliza la edición (para que JTable no intente setValueAt después de que modifiquemos el modelo)
-                fireEditingStopped();
+            int viewRow = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
+            if (viewRow >= 0) {
+                // convertir índice de vista a índice de modelo (si hay RowSorter)
+                int modelRow = tabla.convertRowIndexToModel(viewRow);
 
-                String idCita = tabla.getValueAt(fila, 0).toString();
-                IMedicoService gestorMedico = new GestorMedico();
-                Cita cita = gestor.buscarCitaPorId(idCita);
-                PanelCitasPaciente ventanaLista = null;
-                java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(tabla);
-                if (win instanceof PanelCitasPaciente) {
-                    ventanaLista = (PanelCitasPaciente) win;
+                // obtener id desde el modelo (uso del índice de modelo evita desajustes)
+                String idCita = tabla.getModel().getValueAt(modelRow, 0).toString();
+
+                // cancelar la edición sin que JTable intente setValueAt (evita excepciones)
+                cancelCellEditing();
+
+                try {
+                    IMedicoService gestorMedico = new GestorMedico();
+                    Cita cita = gestor.buscarCitaPorId(idCita);
+                    PanelCitasPaciente ventanaLista = null;
+                    java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(tabla);
+                    if (win instanceof PanelCitasPaciente) {
+                        ventanaLista = (PanelCitasPaciente) win;
+                    }
+                    ModificarCita ventanaModificar = new ModificarCita(gestor, gestorMedico, cita, ventanaLista);
+                    ventanaModificar.setVisible(true);
+                    Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+                    int x = (pantalla.width - ventanaModificar.getWidth()) / 2;
+                    int y = (pantalla.height - ventanaModificar.getHeight()) / 2;
+                    ventanaModificar.setLocation(x, y);
+                } catch (Exception ex) {
+                    System.err.println("Error abriendo ModificarCita: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
-                ModificarCita ventanaModificar = new ModificarCita(gestor, gestorMedico, cita, ventanaLista);
-                ventanaModificar.setVisible(true);
-                Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-                int x = (pantalla.width - ventanaModificar.getWidth()) / 2;
-                int y = (pantalla.height - ventanaModificar.getHeight()) / 2;
-                ventanaModificar.setLocation(x, y);
-            } else {
-                // nada seleccionado
             }
-            // limpiar el índice de edición
             editingRow = -1;
         });
 
         btnEliminar.addActionListener(e -> {
-            int fila = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
-            if (fila >= 0) {
-                String id = tabla.getValueAt(fila, 0).toString();
+            int viewRow = editingRow >= 0 ? editingRow : tabla.getSelectedRow();
+            if (viewRow >= 0) {
+                int modelRow = tabla.convertRowIndexToModel(viewRow);
+                String id = tabla.getModel().getValueAt(modelRow, 0).toString();
                 int confirmar = JOptionPane.showConfirmDialog(tabla,
                         "¿Eliminar cita ID " + id + "?", "Confirmar eliminación",
                         JOptionPane.YES_NO_OPTION);
                 if (confirmar == JOptionPane.YES_OPTION) {
-                    // primero notificar fin de edición para que JTable no intente escribir en una fila ya eliminada
-                    fireEditingStopped();
+                    // cancelar la edición para evitar que JTable intente setValueAt en una fila ya eliminada
+                    cancelCellEditing();
 
-                    // luego realizar eliminación en repositorio y modelo
-                    gestor.eliminarCita(id);
-                    try {
-                        ((DefaultTableModel) tabla.getModel()).removeRow(fila);
-                    } catch (IndexOutOfBoundsException ex) {
-                        
-                        System.err.println("Error al eliminar fila del modelo: " + ex.getMessage());
+                    // eliminar en repositorio y en el modelo (usar modelRow)
+                    boolean eliminado = gestor.eliminarCita(id);
+                    if (eliminado) {
+                        try {
+                            ((DefaultTableModel) tabla.getModel()).removeRow(modelRow);
+                            
+                            // refrescar la ventana padre si existe
+                            java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(tabla);
+                            if (win instanceof PanelCitasPaciente) {
+                                ((PanelCitasPaciente) win).refrescarTabla();
+                            }
+                        } catch (IndexOutOfBoundsException ex) {
+                            System.err.println("Error al eliminar fila del modelo: " + ex.getMessage());
+                        }
                     }
                 }
             }

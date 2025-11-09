@@ -105,26 +105,46 @@ public class PanelCitasPaciente extends javax.swing.JFrame {
         initComponents();
     }
     public void refrescarTabla() {
-    // Limpia el modelo de la tabla
-    DefaultTableModel modelo = (DefaultTableModel) tablaCitas.getModel();
-    modelo.setRowCount(0);
+        DefaultTableModel modelo = (DefaultTableModel) tablaCitas.getModel();
+        modelo.setRowCount(0);
 
-    // Vuelve a obtener las citas actualizadas 
-    List<Cita> citasActualizadas = citas; 
-    
-    // Agrega las filas nuevamente
+        // -> Obtener las citas actualizadas desde el gestor en lugar de usar la lista local
+        List<Cita> citasActualizadas = null;
+        try {
+            if (gestor != null && pacienteActual != null) {
+                citasActualizadas = gestor.consultarCitasPaciente(pacienteActual);
+            } else if (gestor != null) {
+                // fallback: todas las citas si no hay paciente (opcional)
+                citasActualizadas = gestor.getCitas();
+            }
+        } catch (Exception ex) {
+            citasActualizadas = null;
+        }
+
+        if (citasActualizadas == null) {
+            // evitar NPE y dejar la tabla vacía
+            return;
+        }
+
         for (Cita c : citasActualizadas) {
             modelo.addRow(new Object[]{
                 c.getId(),
-                c.getFecha().toString(),
-                c.getPaciente().getNombre(),
-                c.getMedico().getNombre(),
+                c.getFecha() != null ? c.getFecha().toString() : "",
+                c.getPaciente() != null ? c.getPaciente().getNombre() : "",
+                c.getMedico() != null ? c.getMedico().getNombre() : "",
                 "Acciones"
             });
         }
-        TableColumn colAcciones = tablaCitas.getColumn("Acciones");
-        colAcciones.setCellRenderer(new BotonTablaCita(gestor, tablaCitas));
-        colAcciones.setCellEditor(new BotonTablaCita(gestor, tablaCitas));
+
+        // reinstalar renderer/editor para la columna de acciones
+        try {
+            TableColumn colAcciones = tablaCitas.getColumn("Acciones");
+            colAcciones.setCellRenderer(new com.mycompany.clinicaapp.Utilidades.BotonTablaCita(gestor, tablaCitas));
+            colAcciones.setCellEditor(new com.mycompany.clinicaapp.Utilidades.BotonTablaCita(gestor, tablaCitas));
+        } catch (IllegalArgumentException e) {
+            // columna no encontrada: ignorar o loggear
+            System.err.println("Columna 'Acciones' no encontrada al refrescar tabla: " + e.getMessage());
+        }
     }
 
   

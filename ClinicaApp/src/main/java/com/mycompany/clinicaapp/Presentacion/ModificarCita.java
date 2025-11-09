@@ -43,6 +43,12 @@ public class ModificarCita extends javax.swing.JFrame {
          this.cita = cita;
          this.ownerLista = owner;
  
+         // Mostrar la fecha actual de la cita en el campo de texto
+         if (cita != null && cita.getFecha() != null) {
+             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+             textoFecha.setText(cita.getFecha().format(formatter));
+         }
+ 
          // poblar combo con médicos de la misma especialidad que el médico actual
          DefaultComboBoxModel<Medico> model = new DefaultComboBoxModel<>();
          if (gestorMedico != null && cita != null && cita.getMedico() != null && cita.getMedico().getEspecialidad() != null) {
@@ -206,57 +212,84 @@ public class ModificarCita extends javax.swing.JFrame {
         String fechastr = textoFecha.getText().trim();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaIngresada;
-    try {
-        fechaIngresada = LocalDate.parse(fechastr, formato);
-        LocalDate hoy = LocalDate.now();
+        try {
+            fechaIngresada = LocalDate.parse(fechastr, formato);
+            LocalDate hoy = LocalDate.now();
 
-        // validar fecha posterior a la actual
-        if (!fechaIngresada.isAfter(hoy)) {
-            JOptionPane.showMessageDialog(null, 
-                "La fecha debe ser posterior a la actual.",
-                "Fecha no válida",
-                JOptionPane.WARNING_MESSAGE);
+            // validar fecha posterior a la actual
+            if (!fechaIngresada.isAfter(hoy)) {
+                JOptionPane.showMessageDialog(null,
+                    "La fecha debe ser posterior a la actual.",
+                    "Fecha no válida",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(null,
+                "Formato de fecha inválido. Usa el formato dd/MM/yyyy.\nEjemplo: 27/10/2025",
+                "Error de formato",
+                JOptionPane.ERROR_MESSAGE);
             return;
         }
-        //return fechaIngresada;
-
-    } catch (DateTimeParseException e) {
-        // el formato no es valido
-        JOptionPane.showMessageDialog(null, 
-            "Formato de fecha inválido. Usa el formato dd/MM/yyyy.\nEjemplo: 27/10/2025",
-            "Error de formato",
-            JOptionPane.ERROR_MESSAGE);
-        return;
-    }
 
         Medico seleccionado = (Medico) jComboBox1.getSelectedItem();
-        ///System.out.println(seleccionado.getEspecialidad());
+        if (seleccionado == null) {
+            JOptionPane.showMessageDialog(this, "No hay ningún médico seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         if (cita == null || gestorCita == null) {
+            JOptionPane.showMessageDialog(this, "Error interno: cita o gestor no disponible.", "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
             return;
         }
 
-        // si es el mismo médico, sólo cerrar
-        if (cita.getMedico() != null && cita.getMedico().getCedula() != null
-                && cita.getMedico().getCedula().equals(seleccionado.getCedula())) {
+        // Verificar si hubo cambios (médico o fecha)
+        boolean medicoIgual = cita.getMedico() != null && cita.getMedico().getCedula() != null
+                && cita.getMedico().getCedula().equals(seleccionado.getCedula());
+        boolean fechaIgual = cita.getFecha() != null && cita.getFecha().equals(fechaIngresada);
+
+        // si no hay cambios, sólo cerrar
+        if (medicoIgual && fechaIgual) {
+            JOptionPane.showMessageDialog(this, "No hay cambios para aplicar.", "Información", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             return;
         }
 
-        // crear nueva cita con el mismo id, fecha, diagnóstico y paciente pero con el nuevo médico
-        Cita nueva;
-        nueva = new Cita(cita.getId(),fechaIngresada, cita.getDiagnostico(), seleccionado, cita.getPaciente());
-        boolean ok = gestorCita.modificarCita(cita.getId(), nueva);
+        // crear nueva cita con el mismo id, nueva fecha y nuevo médico
+        Cita nueva = new Cita(cita.getId(), fechaIngresada, cita.getDiagnostico(), seleccionado, cita.getPaciente());
+
+        // DEBUG: mostrar datos en consola antes de llamar al gestor
+        System.out.println("ModificarCita: intentando modificar cita id=" + cita.getId());
+        System.out.println(" - fecha actual: " + (cita.getFecha() != null ? cita.getFecha() : "null") + " -> nueva: " + fechaIngresada);
+        System.out.println(" - medico actual: " + (cita.getMedico() != null ? cita.getMedico().getCedula() : "null") + " -> nuevo: " + seleccionado.getCedula());
+
+        boolean ok = false;
+        try {
+            ok = gestorCita.modificarCita(cita.getId(), nueva);
+        } catch (Exception ex) {
+            // mostrar excepción para depuración
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Excepción al modificar cita:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+            return;
+        }
+
         if (ok) {
-            JOptionPane.showMessageDialog(this, "Médico cambiado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Médico/cita modificada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            // refrescar tabla en la ventana padre si se pasó
             if (ownerLista != null) {
                 ownerLista.refrescarTabla();
+            } else {
+                // aviso para desarrollo: si ownerLista es null la vista no se actualizará automáticamente
+                System.out.println("ModificarCita: ownerLista es null, no se refrescará la tabla. Asegúrate de pasar la referencia al abrir el diálogo.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo cambiar el médico.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo cambiar la cita. gestorCita.modificarCita devolvió false.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("ModificarCita: modificarCita returned false for id=" + cita.getId());
         }
-         this.dispose();
-    
+
+        this.dispose();
     }//GEN-LAST:event_botonAplicarActionPerformed
 
     private void textoFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textoFechaActionPerformed

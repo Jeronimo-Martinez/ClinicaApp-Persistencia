@@ -88,20 +88,34 @@ public class GestorCita implements IGestorCita {
             return false;
         }}
 
+        /**
+         * Modifica una cita existente identificada por id.
+         * Reemplaza la entrada en la lista y actualiza el registro en el repositorio JSON.
+         *
+         * @param idCita identificador de la cita a modificar
+         * @param nueva  objeto Cita con los nuevos datos
+         * @return true si la modificación fue exitosa, false si no se encontró la cita o ocurrió un error
+         */
         @Override
         public boolean modificarCita(String idCita, Cita nueva) {
             try{
+                System.out.println("GestorCita.modificarCita: buscando cita id=" + idCita + " en lista de " + citas.size() + " citas");
                 for(int i = 0 ; i < citas.size(); i++){
                     Cita c = citas.get(i);
                     if (c.getId().equals(idCita)){
+                        System.out.println("GestorCita.modificarCita: cita encontrada en índice " + i);
                         citas.set(i, nueva);
-                        repositorio.actualizarCita(nueva); // Guardar cambios en JSON
-                        return true;
+                        boolean guardado = repositorio.actualizarCita(nueva); // Guardar cambios en JSON
+                        System.out.println("GestorCita.modificarCita: repositorio.actualizarCita devolvió " + guardado);
+                        return guardado;
                     
                 }  
-            }return false;
+            }
+            System.out.println("GestorCita.modificarCita: cita id=" + idCita + " NO encontrada en la lista");
+            return false;
             }catch (Exception exception) {                                  
-                System.out.println("Error inesperado");
+                System.err.println("GestorCita.modificarCita: excepción - " + exception.getMessage());
+                exception.printStackTrace();
                 return false;
         }}
         @Override
