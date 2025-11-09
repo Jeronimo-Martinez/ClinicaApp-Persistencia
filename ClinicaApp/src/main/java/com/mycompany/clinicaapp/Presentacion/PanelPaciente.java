@@ -163,12 +163,8 @@ public class PanelPaciente extends JPanel {
                     // Se crea la lista de citas del paciente que se necesita para el panelCita
                     List<Cita> citasPaciente = gestorCita.consultarCitasPaciente(pacienteAutenticado);
 
-                    PanelCitasPaciente panelCita = new PanelCitasPaciente(citasPaciente, gestorCita, pacienteAutenticado);
-                    ventanaPrincipal = (JFrame) SwingUtilities.getWindowAncestor(PanelPaciente.this);
-                    ventanaPrincipal.setContentPane(panelCita);
-                    ventanaPrincipal.revalidate();
-                    ventanaPrincipal.repaint();
-
+                    PanelCitasPaciente ventanaCitasPaciente = new PanelCitasPaciente(citasPaciente, gestorCita, pacienteAutenticado);
+                    ventanaCitasPaciente.setVisible(true);
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(PanelPaciente.this, "¡Ups! Ha ocurrido un error al abrir el panel de citas ...", "Error", JOptionPane.ERROR_MESSAGE);
