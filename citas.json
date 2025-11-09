@@ -1,0 +1,82 @@
+[
+  {
+    "id": "10e0b97a",
+    "fecha": "2026-02-24",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "2222",
+      "nombre": "Laura Torres",
+      "especialidad": {
+        "nombre": "Medicina General"
+      },
+      "contrasena": "2222"
+    },
+    "paciente": {
+      "cedula": "1096607451",
+      "nombre": "Carlos",
+      "telefono": "3182749841",
+      "edad": 30,
+      "contrasena": "2222"
+    }
+  },
+  {
+    "id": "d22f5be9",
+    "fecha": "2026-03-03",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "1111",
+      "nombre": "Andrés Gómez",
+      "especialidad": {
+        "nombre": "Cardiología"
+      },
+      "contrasena": "1111"
+    },
+    "paciente": {
+      "cedula": "1096607451",
+      "nombre": "Carlos",
+      "telefono": "3182749841",
+      "edad": 30,
+      "contrasena": "2222"
+    }
+  },
+  {
+    "id": "85860868",
+    "fecha": "2025-06-06",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "1111",
+      "nombre": "Andrés Gómez",
+      "especialidad": {
+        "nombre": "Cardiología"
+      },
+      "contrasena": "1111"
+    },
+    "paciente": {
+      "cedula": "1098453951",
+      "nombre": "Eliza",
+      "telefono": "3185249971",
+      "edad": 21,
+      "contrasena": "1111"
+    }
+  },
+  {
+    "id": "0f5866ff",
+    "fecha": "2026-01-01",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "3333",
+      "nombre": "Camilo Mendoza",
+      "especialidad": {
+        "nombre": "Medicina General"
+      },
+      "contrasena": "3333"
+    },
+    "paciente": {
+      "cedula": "1098453951",
+      "nombre": "Eliza",
+      "telefono": "3185249971",
+      "edad": 21,
+      "contrasena": "1111"
+    }
+  }
+]
