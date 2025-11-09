@@ -27,8 +27,16 @@
     "cedula": "4444",
     "nombre": "Laura Torres",
     "especialidad": {
-      "nombre": "Pediatria"
+      "nombre": "Pediatría"
     },
     "contrasena": "4444"
+  },
+  {
+    "cedula": "6767676767",
+    "nombre": "Hector Gonzalez",
+    "especialidad": {
+      "nombre": "Patología"
+    },
+    "contrasena": "Hector6767"
   }
 ]
