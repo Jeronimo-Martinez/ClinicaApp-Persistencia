@@ -177,7 +177,9 @@ public class GestionAdminEnMedicos extends JPanel {
                                             "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 limpiarCampos();
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo registrar el médico.", 
+                // Mantener consistencia con la validación de pacientes: indicar
+                // que puede existir una cédula duplicada o que no se pudo registrar.
+                JOptionPane.showMessageDialog(this, "Error: ya existe un médico con esa cédula o no se pudo registrar", 
                                             "Error", JOptionPane.ERROR_MESSAGE);
             }
 
