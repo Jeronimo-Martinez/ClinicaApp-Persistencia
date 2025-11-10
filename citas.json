@@ -22,7 +22,7 @@
   {
     "id": "d22f5be9",
     "fecha": "2026-03-03",
-    "diagnostico": "",
+    "diagnostico": "prueba diagnostico",
     "medico": {
       "cedula": "1111",
       "nombre": "Andrés Gómez",
@@ -77,6 +77,26 @@
       "telefono": "3185249971",
       "edad": 21,
       "contrasena": "1111"
+    }
+  },
+  {
+    "id": "9e8ece01",
+    "fecha": "2025-12-12",
+    "diagnostico": "",
+    "medico": {
+      "cedula": "6767676767",
+      "nombre": "Hector Gonzalez",
+      "especialidad": {
+        "nombre": "Patología"
+      },
+      "contrasena": "Hector6767"
+    },
+    "paciente": {
+      "cedula": "12345678",
+      "nombre": "Jose Juan Peranito Fulano",
+      "telefono": "0180003232",
+      "edad": 25,
+      "contrasena": "fulano1234"
     }
   }
 ]
