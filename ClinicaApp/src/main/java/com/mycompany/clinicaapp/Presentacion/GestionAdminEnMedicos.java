@@ -177,7 +177,7 @@ public class GestionAdminEnMedicos extends JPanel {
                                             "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 limpiarCampos();
             } else {
-                JOptionPane.showMessageDialog(this, "No se pudo registrar el médico.", 
+                JOptionPane.showMessageDialog(this, "Error: ya existe un médico con esa cédula o no se pudo registrar", 
                                             "Error", JOptionPane.ERROR_MESSAGE);
             }
 

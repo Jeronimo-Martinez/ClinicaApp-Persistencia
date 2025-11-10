@@ -91,6 +91,17 @@ public class GestorMedico implements IMedicoService {
     // Agregar un nuevo médico
     @Override
     public boolean agregarMedic(Medico medico) {
+        if (medico == null) {
+            return false;
+        }
+
+        // Verificar si ya existe un médico con la misma cédula
+        for (Medico m : listaMedicos) {
+            if (m.getCedula().equals(medico.getCedula())) {
+                return false; // ya existe
+            }
+        }
+
         listaMedicos.add(medico);
         repositorio.guardar(listaMedicos);
         return true;
