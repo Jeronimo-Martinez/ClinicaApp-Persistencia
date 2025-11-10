@@ -104,19 +104,23 @@ public class AgregarEspecialidad extends javax.swing.JPanel {
             return;
         }
         Especialidad nueva = new Especialidad(nombreEspecialidad);
-        gestor.registrarEspecialidad(nueva);
-        JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente.");
-                PanelAdministrador panel = new PanelAdministrador(gestor);
-                    panel.setSize(this.getSize());
-                    panel.setLocation(0, 0);
-                    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
-                    if (window instanceof JFrame frame) {
-                        frame.setTitle("");
-                        frame.setContentPane(panel);
-                        frame.revalidate();
-                        frame.repaint();
-        
-                    }
+        boolean exito = gestor.registrarEspecialidad(nueva);
+
+        if (exito) {
+            JOptionPane.showMessageDialog(this, "Especialidad agregada correctamente.");
+            PanelAdministrador panel = new PanelAdministrador(gestor);
+            panel.setSize(this.getSize());
+            panel.setLocation(0, 0);
+            java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+            if (window instanceof JFrame frame) {
+                frame.setTitle("");
+                frame.setContentPane(panel);
+                frame.revalidate();
+                frame.repaint();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: ya existe una especialidad con ese nombre o no se pudo registrar", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
     }//GEN-LAST:event_agregarActionPerformed
 

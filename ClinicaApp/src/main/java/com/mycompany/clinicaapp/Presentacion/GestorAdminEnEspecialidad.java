@@ -70,9 +70,13 @@ public class GestorAdminEnEspecialidad extends JPanel {
         //Crea la nueva especialidad y llama al gestor 
         Especialidad nueva = new Especialidad(nombre);
         try {
-            gestor.registrarEspecialidad(nueva);
-            JOptionPane.showMessageDialog(this, "Especialidad registrada correctamente");
-            txtNombre.setText("");
+            boolean exito = gestor.registrarEspecialidad(nueva);
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Especialidad registrada correctamente");
+                txtNombre.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: ya existe una especialidad con ese nombre o no se pudo registrar", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al registrar: " + ex.getMessage());
         }

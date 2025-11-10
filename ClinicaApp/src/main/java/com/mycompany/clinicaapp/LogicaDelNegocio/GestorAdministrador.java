@@ -99,8 +99,8 @@ public class GestorAdministrador implements IGestorAdministrador {
      */
 
     @Override
-    public void registrarEspecialidad(Especialidad especialidad) {
-        especialidadService.ingresarEspecialidad(especialidad);
+    public boolean registrarEspecialidad(Especialidad especialidad) {
+        return especialidadService.ingresarEspecialidad(especialidad);
     }
 
     @Override

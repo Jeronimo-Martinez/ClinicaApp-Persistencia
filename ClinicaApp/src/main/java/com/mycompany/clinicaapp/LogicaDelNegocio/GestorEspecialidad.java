@@ -28,6 +28,17 @@ public class GestorEspecialidad implements IEspecialidadService {
 
     @Override
     public boolean ingresarEspecialidad(Especialidad especialidad) {
+        if (especialidad == null || especialidad.getNombre() == null) {
+            return false;
+        }
+
+        // Verificar si ya existe una especialidad con el mismo nombre (insensible a mayúsculas)
+        for (Especialidad e : listaEspecialidades) {
+            if (e.getNombre().equalsIgnoreCase(especialidad.getNombre())) {
+                return false; // ya existe
+            }
+        }
+
         listaEspecialidades.add(especialidad);
         repositorio.guardar(listaEspecialidades);
         return true;
