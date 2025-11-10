@@ -156,7 +156,7 @@ public class GestionAdminEnPacientes extends JPanel {
             limpiarCampos();
             cargarPacientes();
         } else {
-            JOptionPane.showMessageDialog(this, "Error: ya existe un paciente con esa cédula o no se pudo registrar");
+            JOptionPane.showMessageDialog(this, "Error: La cédula ya se encuentra registrada o no se pudo registrar");
         }
     }
 
