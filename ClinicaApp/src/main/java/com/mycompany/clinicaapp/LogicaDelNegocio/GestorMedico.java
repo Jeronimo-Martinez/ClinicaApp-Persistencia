@@ -95,11 +95,14 @@ public class GestorMedico implements IMedicoService {
             return false;
         }
 
-        // Verificar si ya existe un médico con la misma cédula
-        for (Medico m : listaMedicos) {
-            if (m.getCedula().equals(medico.getCedula())) {
-                return false; // ya existe
-            }
+        String cedula = medico.getCedula();
+        if (cedula == null) {
+            return false;
+        }
+
+        // Verificar si ya existe la cédula en pacientes o médicos (global)
+        if (com.mycompany.clinicaapp.Utilidades.ValidadorIdentidad.estaCedulaEnUso(cedula)) {
+            return false; // ya existe en algún tipo de usuario
         }
 
         listaMedicos.add(medico);

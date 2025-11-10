@@ -65,7 +65,7 @@ public class GestionAdminEnMedicos extends JPanel {
         panelForm.add(new JLabel("Contraseña:"), gbc);
 
         gbc.gridx = 1;
-        txtContrasena = new JTextField(15);
+        txtContrasena = new JPasswordField(15);
         panelForm.add(txtContrasena, gbc);
 
         // Fila 4 - Especialidad

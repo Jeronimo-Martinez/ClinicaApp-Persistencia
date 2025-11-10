@@ -45,13 +45,16 @@ public class GestorPaciente implements IPacienteService{
         if (paciente == null) {
             return false;
         }
-
-        for (Paciente pac : listaPacientes) {
-            if (pac.getCedula().equals(paciente.getCedula())) {
-                return false; // si ya existe un paciente con esa cédula
-            }
+        String cedula = paciente.getCedula();
+        if (cedula == null) {
+            return false;
         }
-        
+
+        // Verificar existencia global (pacientes o médicos)
+        if (com.mycompany.clinicaapp.Utilidades.ValidadorIdentidad.estaCedulaEnUso(cedula)) {
+            return false; // ya existe
+        }
+
         listaPacientes.add(paciente);
         repositorioPaciente.guardar(listaPacientes);
         return true;
