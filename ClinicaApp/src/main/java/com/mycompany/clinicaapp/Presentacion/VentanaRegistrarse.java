@@ -180,7 +180,7 @@ public class VentanaRegistrarse extends JFrame {
                     dispose(); // cerrar la ventana
                 } else {
                     JOptionPane.showMessageDialog(VentanaRegistrarse.this,
-                            "Ya existe un paciente con esa cédula.",
+                            "La cédula ya se encuentra registrada.",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
